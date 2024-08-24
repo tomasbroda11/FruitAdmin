@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalles del Pedido{% endblock %}
+
+{% block content %}
+    <h1>Detalles del Pedido #{{ pedido.id }}</h1>
+    <p><strong>Cliente:</strong> {{ pedido.cliente.nombre }} {{ pedido.cliente.apellido }}</p>
+    <p><strong>Email:</strong> {{ pedido.cliente.email }}</p>
+    <p><strong>Teléfono:</strong> {{ pedido.cliente.telefono }}</p>
+    <p><strong>Fecha:</strong> {{ pedido.fecha }}</p>
+    
+    <h3>Productos</h3>
+    <ul>
+        {% for item in productos_pedido %}
+            <li>{{ item.producto.nombre }} - Cantidad: {{ item.cantidad }} - Precio unitario: ${{ item.producto.costo|floatformat:2 }}</li>
+        {% endfor %}
+    </ul>
+    
+    <p><strong>Precio Total:</strong> ${{ pedido.precio_total|floatformat:2 }}</p>
+    
+    <a href="{% url 'pedido_list' %}" class="btn btn-secondary">Volver a la lista</a>
+{% endblock %}

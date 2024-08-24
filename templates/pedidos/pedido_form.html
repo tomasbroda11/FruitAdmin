@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}Nuevo Pedido{% endblock %}
+
+{% block content %}
+<h2>Nuevo Pedido</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ pedido_form.as_p }}
+
+    <h3>Productos</h3>
+    <div id="producto-formset">
+        {{ producto_formset.management_form }}
+        {% for form in producto_formset.forms %}
+            <div class="form-group">
+                {{ form.producto.label_tag }} {{ form.producto }}
+                {{ form.cantidad.label_tag }} {{ form.cantidad }}
+                <button type="button" class="btn btn-danger" onclick="removeForm(this)">Eliminar</button>
+            </div>
+        {% endfor %}
+    </div>
+    <button type="button" class="btn btn-secondary" onclick="addForm()">Agregar Producto</button>
+    <div class="form-group">
+        <label>Precio Total</label>
+        <input type="text" id="precio-total" value="0" readonly class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">Crear Pedido</button>
+</form>
+
+<script>
+    let productos = [];
+
+    $.ajax({
+        type: 'GET',
+        url: '{% url "get_productos" %}',
+        success: function(data) {
+            productos = data;
+            // Ahora que tenemos los productos, podemos agregar el evento de click al botón Agregar Producto
+            document.querySelector('button[type="button"][onclick="addForm()"]').addEventListener('click', addForm);
+        }
+    });
+
+    function addForm() {
+        const formsetDiv = document.getElementById('producto-formset');
+        const newFormIndex = formsetDiv.querySelectorAll('.form-group').length;
+        const newFormHtml = `
+            <div class="form-group">
+                <label for="id_form-${newFormIndex}-producto">Producto:</label>
+                <select name="form-${newFormIndex}-producto" id="id_form-${newFormIndex}-producto">
+                    {% for producto in productos %}
+                        <option value="{{ producto.id }}" data-costo="{{ producto.costo }}" data-porcentaje-ganancia="{{ producto.porcentaje_ganancia }}">{{ producto.nombre }}</option>
+                    {% endfor %}
+                </select>
+                <label for="id_form-${newFormIndex}-cantidad">Cantidad:</label>
+                <input type="number" name="form-${newFormIndex}-cantidad" id="id_form-${newFormIndex}-cantidad">
+                <button type="button" class="btn btn-danger" onclick="removeForm(this)">Eliminar</button>
+                <input type="hidden" name="form-${newFormIndex}-id" id="id_form-${newFormIndex}-id">
+            </div>
+        `;
+        const newForm = formsetDiv.querySelector(`#id_form-${newFormIndex}-producto`);
+        newForm.addEventListener('change', updateTotal);
+        const newCantidad = formsetDiv.querySelector(`#id_form-${newFormIndex}-cantidad`);
+        newCantidad.addEventListener('input', updateTotal);
+        formsetDiv.insertAdjacentHTML('beforeend', newFormHtml);
+        updateTotal();
+        updateFormCount();
+    }
+
+    function removeForm(button) {
+        button.closest('.form-group').remove();
+        updateFormCount
+    }
+
+    function updateTotal() {
+        let total = 0;
+        const formsetDiv = document.getElementById('producto-formset');
+        const forms = formsetDiv.querySelectorAll('.form-group');
+
+        forms.forEach(form => {
+            const productoSelect = form.querySelector('select');
+            const cantidadInput = form.querySelector('input[type="number"]');
+            
+            const precio = parseFloat(productoSelect.options[productoSelect.selectedIndex].dataset.costo) || 0;
+            const porcentajeGanancia = parseFloat(productoSelect.options[productoSelect.selectedIndex].dataset.porcentajeGanancia) || 0;
+            const cantidad = parseInt(cantidadInput.value) || 0;
+            
+            total += (precio * (1 + porcentajeGanancia / 100)) * cantidad;
+        });
+
+        document.getElementById('precio-total').value = total.toFixed(2);
+    }
+
+    function updateFormCount() {
+        const formsetDiv = document.getElementById('producto-formset');
+        const totalForms = formsetDiv.querySelectorAll('.form-group').length;
+        document.getElementById('id_form-TOTAL_FORMS').value = totalForms;
+    }
+
+    // Agregamos un evento de cambio a los campos de cantidad y producto existentes
+    const formsetDiv = document.getElementById('producto-formset');
+    const forms = formsetDiv.querySelectorAll('.form-group');
+    forms.forEach(form => {
+        const productoSelect = form.querySelector('select');
+        productoSelect.addEventListener('change', updateTotal);
+        const cantidadInput = form.querySelector('input[type="number"]');
+        cantidadInput.addEventListener('input', updateTotal);
+    });
+</script>
+{% endblock %}
