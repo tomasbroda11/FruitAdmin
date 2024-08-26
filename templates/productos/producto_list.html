@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title%}Productos{% endblock %}
+
+{% block content %}
+<h2>Lista de productos</h2>
+<a href="{% url 'producto_create' %}" class="btn btn-primary">Cargar Nuevo Producto</a>
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th>Id Producto</th>
+            <th>Nombre</th>
+            <th>Costo</th>
+            <th>Categoria</th>
+            <th>Stock actual</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for producto in productos %}
+        <tr>
+            <td>{{ producto.id }}</td>
+            <td>{{producto.nombre}}</td>
+            <td>{{ producto.costo }}</td>
+            <td>{{ producto.categoria }}</td>
+            <td>{{ producto.cantidad }}</td>
+            <td>
+                <a href="{% url 'producto_detail' producto.pk %}" class="btn btn-info">Modificar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">No hay productos cargados.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

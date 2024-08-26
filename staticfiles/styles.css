@@ -1,0 +1,50 @@
+.toggle {
+    background: #eee;
+    width: 100px;
+    height: 50px;
+    padding: 5px;
+    border-radius: 50px;
+    margin: 50px;
+  }
+  
+  label {
+    width: 40px;
+    height: 40px;
+    background: #ccc;
+    display: flex;
+    cursor: pointer;
+    border-radius: 50px;
+    transition: all 0.25s ease 0s;
+  }
+  
+  input {
+    display: none;
+  }
+  
+  input:checked + label {
+    margin-left: 50px;
+    background: #47c;
+  }
+  .toggle:before, .toggle:after {
+    content: "ON";
+    position: absolute;
+    font-size: 12px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    padding: 10px 0;
+    z-index: 0;
+    color: #47c;
+  }
+  
+  .toggle:after {
+    content: "OFF";
+    margin-top: -40px;
+    margin-left: 50px;
+    color: #666;
+  }
+  
+  label {
+   position: relative;
+   z-index: 1;
+  }

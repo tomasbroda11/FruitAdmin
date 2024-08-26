@@ -12,6 +12,7 @@
             <th>Cliente</th>
             <th>Fecha de Creación</th>
             <th>Precio Total</th>
+            <th>Estado</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -21,9 +22,12 @@
             <td>{{ pedido.id }}</td>
             <td>{{pedido.cliente.nombre}}</td>
             <td>{{ pedido.fecha }}</td>
-            <td>{{ pedido.precio_total }}</td>
+            <td>${{ pedido.precio_total }}</td>
+            <td>{{pedido.estado}}</td>
             <td>
-                <a href="{% url 'pedido_detail' pedido.pk %}" class="btn btn-info">Ver</a>
+                <a href="{% url 'pedido_detail' pedido.pk %}" class="btn btn-outline-info">Ver</a>
+                <a href="#" class="btn btn-outline-danger" data-pedido-pk="{{ pedido.pk }}" onclick="deletePedido(this)">Eliminar</a>
+
             </td>
         </tr>
         {% empty %}
@@ -33,4 +37,27 @@
         {% endfor %}
     </tbody>
 </table>
+
+<script>
+    function deletePedido(pedidoId) {
+        if (confirm('¿Estás seguro de que deseas eliminar este pedido?')) {
+            fetch(`/pedidos/${pedidoId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    window.location.href = data.redirect_url;
+                } else {
+                    alert('No se pudo eliminar el pedido.');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    }
+</script>
 {% endblock %}
