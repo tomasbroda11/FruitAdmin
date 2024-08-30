@@ -9,4 +9,5 @@ urlpatterns = [
     path('pedidos/', include('pedidos.urls')),
     path('productos/', include('productos.urls')),
     path('dashboards/', include('dashboards.urls')),
+    path('clientes/', include('clientes.urls')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
