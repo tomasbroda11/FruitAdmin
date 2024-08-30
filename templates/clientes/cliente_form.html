@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Nuevo cliente{% endblock %}
+
+{% block content %}
+<h2>Nuevo cliente</h2>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        {{ form.nombre.label_tag }}
+        {{ form.nombre }}
+    </div>
+    <div class="form-group">
+        {{ form.email.label_tag }}
+        {{ form.email }}
+    </div>
+    <div class="form-group">
+        {{ form.telefono.label_tag }}
+        {{ form.telefono }}
+    </div>
+    <div class="form-group">
+        {{ form.direccion.label_tag }}
+        {{ form.direccion }}
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar cliente</button>
+</form>
+{% endblock %}

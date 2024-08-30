@@ -16,7 +16,7 @@ def clientes_create(request):
     else:
         form = ClienteForm()
     
-    return render(request, 'clientes/clientes.html', {'form': form})
+    return render(request, 'clientes/cliente_form.html', {'form': form})
 
 def clientes_detail(request,pk):
     cliente = get_object_or_404(Cliente,pk=pk)
