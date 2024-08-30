@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de clientes{% endblock %}
+
+{% block content %}
+<h2>Lista de clientes</h2>
+<a href="{% url 'cliente_create' %}" class="btn btn-primary">Alta cliente</a>
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th>Id cliente</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Telefono</th>
+            <th>Direccion</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cliente in clientes %}
+        <tr>
+            <td>{{ cliente.id }}</td>
+            <td>{{cliente.nombre}}</td>
+            <td>{{ cliente.email }}</td>
+            <td>{{ cliente.telefono }}</td>
+            <td>{{cliente.direccion}}</td>
+            <td>
+                <a href="{% url 'cliente_detail' cliente.pk %}" class="btn btn-outline-info">Modificar</a>
+                <a href="#" class="btn btn-outline-danger" data-pedido-pk="{{ cliente.pk }}" onclick="deletePedido(this)">Eliminar</a>
+
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">No hay clientes.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    function deletePedido(pedidoId) {
+        if (confirm('¿Estás seguro de que deseas eliminar este pedido?')) {
+            fetch(`/pedidos/${pedidoId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    window.location.href = data.redirect_url;
+                } else {
+                    alert('No se pudo eliminar el pedido.');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    }
+</script>
+{% endblock %}
