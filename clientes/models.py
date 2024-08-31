@@ -25,10 +25,12 @@ class Ciudad(models.Model):
 
 class Cliente(models.Model):
     nombre = models.CharField(null=False, max_length=35)
-    cuit = models.IntegerField(null=False, max_length=11, default=0)
+    cuit = models.IntegerField(null=False, default='-')
     email = models.EmailField(blank=True, null= True, max_length=35)
     direccion = models.CharField(blank=True, null=True, max_length=35 )
     telefono = models.CharField(blank=True, null=True, max_length=35)
+    pais = models.ForeignKey(Pais, on_delete=models.SET_NULL, null=True)
+    provincia = models.ForeignKey(Provincia, on_delete=models.SET_NULL, null=True)
     ciudad = models.ForeignKey(Ciudad, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):

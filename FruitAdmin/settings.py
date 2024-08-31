@@ -98,7 +98,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+CSC_API_KEY = 'TXA5OHRwZEdVYUd5QnBrYWlvZ1Nlc2xya21zanFrQ3BneWxCU2h3VQ=='
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
