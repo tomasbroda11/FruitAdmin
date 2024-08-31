@@ -10,7 +10,10 @@ def productos_create(request):
     if request.method == 'POST':
         form = ProductoForm(request.POST)
         if form.is_valid():
-            form.save()
+            producto = form.save(commit=False)
+            tipo_medida = request.POST.get('tipo_medida_hidden')
+            producto.tipo_medida = tipo_medida
+            producto.save()
             return redirect('producto_list')
     else:
         form = ProductoForm()

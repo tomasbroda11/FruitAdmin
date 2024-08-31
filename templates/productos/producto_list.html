@@ -13,6 +13,7 @@
             <th>Costo</th>
             <th>Categoria</th>
             <th>Stock actual</th>
+            <th>Tipo de medida</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -21,9 +22,10 @@
         <tr>
             <td>{{ producto.id }}</td>
             <td>{{producto.nombre}}</td>
-            <td>{{ producto.costo }}</td>
+            <td>${{ producto.costo }}</td>
             <td>{{ producto.categoria }}</td>
             <td>{{ producto.cantidad }}</td>
+            <td>{{ producto.tipo_medida }}</td>
             <td>
                 <a href="{% url 'producto_detail' producto.pk %}" class="btn btn-info">Modificar</a>
             </td>
