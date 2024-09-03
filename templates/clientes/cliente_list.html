@@ -26,7 +26,7 @@
             <td>{{cliente.direccion}}</td>
             <td>
                 <a href="{% url 'cliente_detail' cliente.pk %}" class="btn btn-outline-info">Modificar</a>
-                <a href="#" class="btn btn-outline-danger" data-pedido-pk="{{ cliente.pk }}" onclick="deletePedido(this)">Eliminar</a>
+                <a href="#" class="btn btn-outline-danger" data-cliente-pk="{{ cliente.pk }}" onclick="deleteCliente(this)">Eliminar</a>
 
             </td>
         </tr>
@@ -39,23 +39,25 @@
 </table>
 
 <script>
-    function deletePedido(pedidoId) {
-        if (confirm('¿Estás seguro de que deseas eliminar este pedido?')) {
-            fetch(`/pedidos/${pedidoId}/`, {
-                method: 'DELETE',
+    function deleteCliente(element) {
+        const clienteId = element.getAttribute('data-cliente-pk');
+        const nombreCliente = element.getAttribute('nombre-cliente');
+        if (confirm(`¿Estás seguro de que deseas eliminar el cliente ${nombreCliente}?`)) {
+            fetch(`/clientes/${clienteId}/delete/`, {  
+                method: 'POST',
                 headers: {
                     'X-CSRFToken': '{{ csrf_token }}',
                     'Content-Type': 'application/json'
                 }
-            }).then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    window.location.href = data.redirect_url;
+            }).then(response => {
+                if (response.ok) {
+                    window.location.reload();
                 } else {
-                    alert('No se pudo eliminar el pedido.');
+                    alert('No se pudo eliminar el cliente.');
                 }
             }).catch(error => {
                 console.error('Error:', error);
+                alert('Ocurrió un error al intentar eliminar el cliente.');
             });
         }
     }

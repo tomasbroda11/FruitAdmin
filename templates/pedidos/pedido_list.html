@@ -39,23 +39,24 @@
 </table>
 
 <script>
-    function deletePedido(pedidoId) {
-        if (confirm('¿Estás seguro de que deseas eliminar este pedido?')) {
-            fetch(`/pedidos/${pedidoId}/`, {
-                method: 'DELETE',
+    function deletePedido(element) {
+        const pedidoId = element.getAttribute('data-pedido-pk');
+        if (confirm(`¿Estás seguro de que deseas eliminar el pedido ${pedidoId}?`)) {
+            fetch(`/pedidos/${pedidoId}/delete/`, {  
+                method: 'POST',
                 headers: {
                     'X-CSRFToken': '{{ csrf_token }}',
                     'Content-Type': 'application/json'
                 }
-            }).then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    window.location.href = data.redirect_url;
+            }).then(response => {
+                if (response.ok) {
+                    window.location.reload();
                 } else {
                     alert('No se pudo eliminar el pedido.');
                 }
             }).catch(error => {
                 console.error('Error:', error);
+                alert('Ocurrió un error al intentar eliminar el pedido.');
             });
         }
     }

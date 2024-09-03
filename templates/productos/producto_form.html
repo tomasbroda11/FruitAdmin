@@ -19,13 +19,23 @@
         {{ form.costo }}
     </div>
     <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input">
+        <input type="radio" id="customRadioInline1" name="tipo_medida" value="peso" class="custom-control-input">
         <label class="custom-control-label" for="customRadioInline1">Peso (en kg)</label>
       </div>
       <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input">
+        <input type="radio" id="customRadioInline2" name="tipo_medida" value="unidad" class="custom-control-input">
         <label class="custom-control-label" for="customRadioInline2">Unidades</label>
       </div>
+    <script>
+        $(document).ready(function() {
+            $('input[name="tipo_medida"]').change(function() {
+                var tipoMedida = $(this).val();
+                $('#tipo_medida_hidden').val(tipoMedida);
+            });
+            // Agrego esta línea para que se seleccione el valor por defecto
+            $('input[name="tipo_medida"]').first().prop('checked', true).trigger('change');
+        });
+    </script>
     <div class="form-group"><br>
         {{ form.cantidad.label_tag }}
         {{ form.cantidad }}
@@ -34,6 +44,8 @@
         {{ form.porcentaje_ganancia.label_tag }}
         {{ form.porcentaje_ganancia }}
     </div>
+    <input type="hidden" id="tipo_medida_hidden" name="tipo_medida_hidden" value="">
     <button type="submit" class="btn btn-primary">Guardar Producto</button>
 </form>
 {% endblock %}
+

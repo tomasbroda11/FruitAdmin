@@ -13,6 +13,7 @@
             <th>Costo</th>
             <th>Categoria</th>
             <th>Stock actual</th>
+            <th>Tipo de medida</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -21,11 +22,13 @@
         <tr>
             <td>{{ producto.id }}</td>
             <td>{{producto.nombre}}</td>
-            <td>{{ producto.costo }}</td>
+            <td>${{ producto.costo }}</td>
             <td>{{ producto.categoria }}</td>
             <td>{{ producto.cantidad }}</td>
+            <td>{{ producto.tipo_medida }}</td>
             <td>
                 <a href="{% url 'producto_detail' producto.pk %}" class="btn btn-info">Modificar</a>
+                <a href="#" class="btn btn-outline-danger" data-producto-pk="{{ producto.pk }}" nombre-producto="{{ producto.nombre }}" onclick="deleteProducto(this)">Eliminar</a>
             </td>
         </tr>
         {% empty %}
@@ -35,4 +38,28 @@
         {% endfor %}
     </tbody>
 </table>
+<script>
+    function deleteProducto(element) {
+        const productoId = element.getAttribute('data-producto-pk');
+        const nombreProducto = element.getAttribute('nombre-producto');
+        if (confirm(`¿Estás seguro de que deseas eliminar el producto ${nombreProducto}?`)) {
+            fetch(`/productos/${productoId}/delete/`, {  
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('No se pudo eliminar el producto.');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('Ocurrió un error al intentar eliminar el producto.');
+            });
+        }
+    }
+</script>
 {% endblock %}

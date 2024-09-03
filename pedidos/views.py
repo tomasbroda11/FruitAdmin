@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Pedido, PedidoProducto, Producto
 from .forms import PedidoForm, PedidoProductoFormSet
 from django.http import JsonResponse, HttpResponse
+from django.views.decorators.http import require_http_methods, require_POST
 
 
 def pedido_list(request):
@@ -17,12 +18,16 @@ def pedido_detail(request, pk):
         'productos_pedido': productos_pedido
     })
 
+@require_POST
 def pedido_delete(request, pk):
-    pedido = get_object_or_404(Pedido, pk=pk)
-    if request.method == 'DELETE':
+    try:
+        pedido = Pedido.objects.get(pk=pk)
         pedido.delete()
-        return JsonResponse({'status': 'success', 'redirect_url': redirect('pedido_list').url})
-    return JsonResponse({'status': 'error'}, status=405)
+        return JsonResponse({'status': 'success'})
+    except Pedido.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Este pedido no existe'}, status=404)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
 def pedido_create(request):
     if request.method == 'POST':

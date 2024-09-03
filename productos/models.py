@@ -7,6 +7,7 @@ class Producto(models.Model):
     costo = models.DecimalField(max_digits=10, decimal_places=2, null=False)
     porcentaje_ganancia = models.DecimalField(max_digits=5, decimal_places=2, null=False)
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
+    tipo_medida = models.CharField(max_length=10, default='unidad')
 
     def __str__(self):
         return self.nombre
