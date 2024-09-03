@@ -19,91 +19,76 @@
             </div>
         {% endfor %}
     </div>
-    <button type="button" class="btn btn-secondary" onclick="addForm()">Agregar Producto</button>
+    <button type="button" class="btn btn-secondary" id="agregar-producto">Agregar Producto</button>
     <div class="form-group">
         <label>Precio Total</label>
         <input type="text" id="precio-total" value="0" readonly class="form-control">
     </div>
     <button type="submit" class="btn btn-primary">Crear Pedido</button>
-</form>
+    </form>
 
 <script>
-    let productos = [];
+    /*
+    document.addEventListener('DOMContentLoaded', function() {
+        const formsetContainer = document.getElementById('producto-formset');
+        const addButton = document.getElementById('agregar-producto');
+        const totalPriceInput = document.getElementById('precio-total');
+        let formCount = {{ producto_formset.total_form_count }};
 
-    $.ajax({
-        type: 'GET',
-        url: '{% url "get_productos" %}',
-        success: function(data) {
-            productos = data;
-            // Ahora que tenemos los productos, podemos agregar el evento de click al botón Agregar Producto
-            document.querySelector('button[type="button"][onclick="addForm()"]').addEventListener('click', addForm);
-        }
-    });
-
-    function addForm() {
-        const formsetDiv = document.getElementById('producto-formset');
-        const newFormIndex = formsetDiv.querySelectorAll('.form-group').length;
-        const newFormHtml = `
-            <div class="form-group">
-                <label for="id_form-${newFormIndex}-producto">Producto:</label>
-                <select name="form-${newFormIndex}-producto" id="id_form-${newFormIndex}-producto">
-                    {% for producto in productos %}
-                        <option value="{{ producto.id }}" data-costo="{{ producto.costo }}" data-porcentaje-ganancia="{{ producto.porcentaje_ganancia }}">{{ producto.nombre }}</option>
-                    {% endfor %}
-                </select>
-                <label for="id_form-${newFormIndex}-cantidad">Cantidad:</label>
-                <input type="number" name="form-${newFormIndex}-cantidad" id="id_form-${newFormIndex}-cantidad">
-                <button type="button" class="btn btn-danger" onclick="removeForm(this)">Eliminar</button>
-                <input type="hidden" name="form-${newFormIndex}-id" id="id_form-${newFormIndex}-id">
-            </div>
-        `;
-        const newForm = formsetDiv.querySelector(`#id_form-${newFormIndex}-producto`);
-        newForm.addEventListener('change', updateTotal);
-        const newCantidad = formsetDiv.querySelector(`#id_form-${newFormIndex}-cantidad`);
-        newCantidad.addEventListener('input', updateTotal);
-        formsetDiv.insertAdjacentHTML('beforeend', newFormHtml);
-        updateTotal();
-        updateFormCount();
-    }
-
-    function removeForm(button) {
-        button.closest('.form-group').remove();
-        updateFormCount
-    }
-
-    function updateTotal() {
-        let total = 0;
-        const formsetDiv = document.getElementById('producto-formset');
-        const forms = formsetDiv.querySelectorAll('.form-group');
-
-        forms.forEach(form => {
-            const productoSelect = form.querySelector('select');
-            const cantidadInput = form.querySelector('input[type="number"]');
+        addButton.addEventListener('click', function() {
+            const newForm = formsetContainer.querySelector('.form-group').cloneNode(true);
             
-            const precio = parseFloat(productoSelect.options[productoSelect.selectedIndex].dataset.costo) || 0;
-            const porcentajeGanancia = parseFloat(productoSelect.options[productoSelect.selectedIndex].dataset.porcentajeGanancia) || 0;
-            const cantidad = parseInt(cantidadInput.value) || 0;
+            // Actualizar los índices del nuevo formulario
+            newForm.innerHTML = newForm.innerHTML.replace(/__prefix__/g, formCount);
             
-            total += (precio * (1 + porcentajeGanancia / 100)) * cantidad;
+            // Limpiar los valores del nuevo formulario
+            newForm.querySelectorAll('select, input').forEach(input => {
+                input.value = '';
+            });
+
+            // Agregar el botón de eliminar HAY QUE BORRARLO/COMENTARLO
+            const deleteButton = document.createElement('button');
+            deleteButton.type = 'button';
+            deleteButton.className = 'btn btn-danger';
+            deleteButton.textContent = 'Eliminar';
+            deleteButton.onclick = function() { removeForm(this); };
+            newForm.appendChild(deleteButton);
+
+            formsetContainer.appendChild(newForm);
+
+            // Actualizar el número total de formularios
+            const totalForms = document.getElementById('id_producto_set-TOTAL_FORMS');
+            totalForms.value = ++formCount;
         });
 
-        document.getElementById('precio-total').value = total.toFixed(2);
-    }
+        // Función para eliminar un formulario
+        window.removeForm = function(button) {
+            const formGroup = button.closest('.form-group');
+            formGroup.remove();
+            
+            // Actualizar el número total de formularios
+            const totalForms = document.getElementById('id_producto_set-TOTAL_FORMS');
+            totalForms.value = --formCount;
 
-    function updateFormCount() {
-        const formsetDiv = document.getElementById('producto-formset');
-        const totalForms = formsetDiv.querySelectorAll('.form-group').length;
-        document.getElementById('id_form-TOTAL_FORMS').value = totalForms;
-    }
+            updateTotalPrice();
+        };
 
-    // Agregamos un evento de cambio a los campos de cantidad y producto existentes
-    const formsetDiv = document.getElementById('producto-formset');
-    const forms = formsetDiv.querySelectorAll('.form-group');
-    forms.forEach(form => {
-        const productoSelect = form.querySelector('select');
-        productoSelect.addEventListener('change', updateTotal);
-        const cantidadInput = form.querySelector('input[type="number"]');
-        cantidadInput.addEventListener('input', updateTotal);
-    });
+        // Función para actualizar el precio total
+        function updateTotalPrice() {
+            let total = 0;
+            formsetContainer.querySelectorAll('.form-group').forEach(formGroup => {
+                const cantidad = formGroup.querySelector('input[name$="-cantidad"]').value;
+                const productoSelect = formGroup.querySelector('select[name$="-producto"]');
+                const precio = productoSelect.options[productoSelect.selectedIndex].dataset.precio;
+                total += cantidad * precio;
+            });
+            totalPriceInput.value = total.toFixed(2);
+        }
+
+        // Agregar event listeners para actualizar el precio total
+        formsetContainer.addEventListener('change', updateTotalPrice);
+        addButton.addEventListener('click', updateTotalPrice);
+    }); */
 </script>
+
 {% endblock %}

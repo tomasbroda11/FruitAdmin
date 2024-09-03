@@ -4,6 +4,7 @@ from .forms import Cliente, ClienteForm
 from django.http import JsonResponse
 from django.conf import settings
 import requests as req
+from django.views.decorators.http import require_POST
 
 def clientes_list(request):
     clientes = Cliente.objects.all()
@@ -25,6 +26,17 @@ def clientes_detail(request,pk):
     return render(request, 'clientes/cliente_detail.html', {
         'cliente': cliente
     })
+
+@require_POST
+def clientes_delete(request, pk):
+    try:
+        cliente = Cliente.objects.get(pk=pk)
+        cliente.delete()
+        return JsonResponse({'status': 'success'})
+    except Cliente.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Este cliente no existe'}, status=404)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
 def get_paises(request):
     url = f"https://api.countrystatecity.in/v1/countries"
