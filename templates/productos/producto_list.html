@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title%}Productos{% endblock %}
+{% block title %}Productos{% endblock %}
 
 {% block content %}
 <h2>Lista de productos</h2>
@@ -11,7 +11,7 @@
             <th>Id Producto</th>
             <th>Nombre</th>
             <th>Costo</th>
-            <th>Categoria</th>
+            <th>Categoría</th>
             <th>Stock actual</th>
             <th>Tipo de medida</th>
             <th>Acciones</th>
@@ -21,19 +21,19 @@
         {% for producto in productos %}
         <tr>
             <td>{{ producto.id }}</td>
-            <td>{{producto.nombre}}</td>
+            <td>{{ producto.nombre }}</td>
             <td>${{ producto.costo }}</td>
-            <td>{{ producto.categoria }}</td>
-            <td>{{ producto.cantidad }}</td>
-            <td>{{ producto.tipo_medida }}</td>
+            <td>{{ producto.categoria.nombre }}</td>
+            <td>{{ producto.cantidad }}{% if producto.tipo_medida == 'peso' %} kg{% endif %}</td>
+            <td>{{ producto.get_tipo_medida_display }}</td>
             <td>
-                <a href="{% url 'producto_detail' producto.pk %}" class="btn btn-info">Modificar</a>
+                <a href="{% url 'producto_detail' producto.pk %}" class="btn btn-info">Ver</a>
                 <a href="#" class="btn btn-outline-danger" data-producto-pk="{{ producto.pk }}" nombre-producto="{{ producto.nombre }}" onclick="deleteProducto(this)">Eliminar</a>
             </td>
         </tr>
         {% empty %}
         <tr>
-            <td colspan="3">No hay productos cargados.</td>
+            <td colspan="7">No hay productos cargados.</td>
         </tr>
         {% endfor %}
     </tbody>

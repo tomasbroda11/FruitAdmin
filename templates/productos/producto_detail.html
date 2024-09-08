@@ -5,9 +5,10 @@
 {% block content %}
     <h1>Detalles del producto #{{ producto.id }}</h1>
     <p><strong>Nombre:</strong> {{ producto.nombre }}</p>
-    <p><strong>Ultimo costo:</strong> {{ producto.costo }}</p>
-    <p><strong>Stock actual:</strong> {{ producto.cantidad }}</p>
-    <p><strong>Categoria:</strong> {{ producto.categoria.nombre }}</p>
+    <p><strong>Último costo:</strong> ${{ producto.costo }}</p>
+    <p><strong>Stock actual:</strong> {{ producto.cantidad }} {% if producto.tipo_medida == 'peso' %}kg{% endif %}</p>
+    <p><strong>Tipo de medida:</strong> {{ producto.get_tipo_medida_display }}</p>
+    <p><strong>Categoría:</strong> {{ producto.categoria.nombre }}</p>
     
     <a href="{% url 'producto_list' %}" class="btn btn-secondary">Volver</a>
 {% endblock %}

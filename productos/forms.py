@@ -8,4 +8,8 @@ class ProductoForm(forms.ModelForm):
     
     class Meta:
         model = Producto
-        fields = ('nombre','categoria','costo', 'cantidad', 'porcentaje_ganancia')
+        fields = ('nombre','categoria','costo', 'cantidad', 'porcentaje_ganancia', 'tipo_medida')
+        widgets = {
+            'cantidad': forms.NumberInput(attrs={'step': 'any'}),
+            'tipo_medida': forms.RadioSelect(choices=Producto.TIPO_MEDIDA_CHOICES),
+        }
