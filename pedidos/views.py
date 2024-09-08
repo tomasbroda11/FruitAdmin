@@ -35,30 +35,44 @@ def pedido_create(request):
         producto_formset = PedidoProductoFormSet(request.POST)
         
         if pedido_form.is_valid() and producto_formset.is_valid():
+            # Crear el pedido pero sin guardar en la base de datos aún
             pedido = pedido_form.save(commit=False)
-            pedido.precio_total = 0  # Inicializamos el precio total en 0
-            
+
+            # Asignar el cliente al pedido
+            cliente = pedido_form.cleaned_data.get('cliente')
+            if cliente:
+                pedido.cliente = cliente
+            else:
+                print("No se seleccionó cliente correctamente")
+
+            pedido.precio_total = 0  # Inicializamos el precio total
+
+            # Guardamos el pedido en la base de datos con el cliente ya asignado
+            pedido.save()
+
+            # Procesar los productos del pedido
             for producto_form in producto_formset:
                 producto = producto_form.cleaned_data.get('producto')
                 cantidad = producto_form.cleaned_data.get('cantidad')
                 
                 if producto and cantidad:
-                    pedido.precio_total += producto.costo * cantidad  # Sumamos el costo de cada producto
-            
-            pedido.save()  # Guardamos el pedido con el precio total calculado
-            producto_formset.instance = pedido
-            producto_formset.save()
+                    PedidoProducto.objects.create(pedido=pedido, producto=producto, cantidad=cantidad)
+                    pedido.precio_total += producto.costo * cantidad  # Sumar al precio total
+
+            # Guardamos el pedido nuevamente con el precio total actualizado
+            pedido.save()
+
             return redirect('pedido_list')
     else:
         pedido_form = PedidoForm()
         producto_formset = PedidoProductoFormSet()
-        productos = Producto.objects.all()
     
     return render(request, 'pedidos/pedido_form.html', {
         'pedido_form': pedido_form,
         'producto_formset': producto_formset,
-        'productos': productos,
     })
+
+
 
 def nuevo_pedido(request):
     productos = Producto.objects.all()

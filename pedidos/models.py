@@ -9,7 +9,10 @@ class Pedido(models.Model):
     estado = models.TextField(default='en espera')
 
     def __str__(self):
-        return f"Pedido {self.id} - {self.cliente.nombre}"
+        if self.cliente:
+            return f"Pedido {self.id} - {self.cliente.nombre}"
+        else:
+            return f"Pedido {self.id} - Cliente desconocido"
 
 class PedidoProducto(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)

@@ -19,7 +19,7 @@
             </div>
         {% endfor %}
     </div>
-    <button type="button" class="btn btn-secondary" id="agregar-producto">Agregar Producto</button>
+    <button type="button" class="btn btn-secondary" id="agregar-producto" onclick="addForm()">Agregar Producto</button>
     <div class="form-group">
         <label>Precio Total</label>
         <input type="text" id="precio-total" value="0" readonly class="form-control">
@@ -27,68 +27,46 @@
     <button type="submit" class="btn btn-primary">Crear Pedido</button>
     </form>
 
-<script>
-    /*
-    document.addEventListener('DOMContentLoaded', function() {
-        const formsetContainer = document.getElementById('producto-formset');
-        const addButton = document.getElementById('agregar-producto');
-        const totalPriceInput = document.getElementById('precio-total');
-        let formCount = {{ producto_formset.total_form_count }};
-
-        addButton.addEventListener('click', function() {
-            const newForm = formsetContainer.querySelector('.form-group').cloneNode(true);
-            
-            // Actualizar los índices del nuevo formulario
-            newForm.innerHTML = newForm.innerHTML.replace(/__prefix__/g, formCount);
-            
-            // Limpiar los valores del nuevo formulario
-            newForm.querySelectorAll('select, input').forEach(input => {
-                input.value = '';
-            });
-
-            // Agregar el botón de eliminar HAY QUE BORRARLO/COMENTARLO
-            const deleteButton = document.createElement('button');
-            deleteButton.type = 'button';
-            deleteButton.className = 'btn btn-danger';
-            deleteButton.textContent = 'Eliminar';
-            deleteButton.onclick = function() { removeForm(this); };
-            newForm.appendChild(deleteButton);
-
-            formsetContainer.appendChild(newForm);
-
+    <script>
+        function addForm() {
+            var formsetDiv = document.getElementById('producto-formset');
+            var totalForms = document.querySelectorAll('#producto-formset .form-group').length;
+    
+            // Clonar el último formulario
+            var newForm = formsetDiv.querySelector('.form-group:last-child').cloneNode(true);
+    
+            // Actualizar el índice del nuevo formulario
+            var formRegex = /-(\d+)-/g;
+            newForm.innerHTML = newForm.innerHTML.replace(formRegex, `-${totalForms}-`);
+    
+            // Limpiar los campos de entrada en el nuevo formulario
+            var inputs = newForm.querySelectorAll('input');
+            inputs.forEach(input => input.value = '');
+    
+            // Agregar el nuevo formulario al formset
+            formsetDiv.appendChild(newForm);
+    
             // Actualizar el número total de formularios
-            const totalForms = document.getElementById('id_producto_set-TOTAL_FORMS');
-            totalForms.value = ++formCount;
-        });
-
-        // Función para eliminar un formulario
-        window.removeForm = function(button) {
-            const formGroup = button.closest('.form-group');
-            formGroup.remove();
-            
-            // Actualizar el número total de formularios
-            const totalForms = document.getElementById('id_producto_set-TOTAL_FORMS');
-            totalForms.value = --formCount;
-
-            updateTotalPrice();
-        };
-
-        // Función para actualizar el precio total
-        function updateTotalPrice() {
-            let total = 0;
-            formsetContainer.querySelectorAll('.form-group').forEach(formGroup => {
-                const cantidad = formGroup.querySelector('input[name$="-cantidad"]').value;
-                const productoSelect = formGroup.querySelector('select[name$="-producto"]');
-                const precio = productoSelect.options[productoSelect.selectedIndex].dataset.precio;
-                total += cantidad * precio;
-            });
-            totalPriceInput.value = total.toFixed(2);
+            document.getElementById('id_pedidoproducto_set-TOTAL_FORMS').value = totalForms + 1;
         }
-
-        // Agregar event listeners para actualizar el precio total
-        formsetContainer.addEventListener('change', updateTotalPrice);
-        addButton.addEventListener('click', updateTotalPrice);
-    }); */
-</script>
+    
+        function removeForm(button) {
+            var formsetDiv = document.getElementById('producto-formset');
+            var formGroup = button.closest('.form-group');
+            formsetDiv.removeChild(formGroup);
+    
+            // Actualizar el número total de formularios
+            var totalForms = document.querySelectorAll('#producto-formset .form-group').length;
+            document.getElementById('id_pedidoproducto_set-TOTAL_FORMS').value = totalForms;
+    
+            // Actualizar los índices de los formularios restantes
+            var forms = document.querySelectorAll('#producto-formset .form-group');
+            forms.forEach((form, index) => {
+                var formRegex = /-(\d+)-/g;
+                form.innerHTML = form.innerHTML.replace(formRegex, `-${index}-`);
+            });
+        }
+    </script>
+    
 
 {% endblock %}
