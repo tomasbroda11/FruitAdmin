@@ -38,32 +38,3 @@ def clientes_delete(request, pk):
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
-def get_paises(request):
-    url = f"https://api.countrystatecity.in/v1/countries"
-    headers = {'X-CSCAPI-KEY': settings.CSC_API_KEY}
-    response = req.get(url, headers=headers)
-    data = response.json()
-    if response.status_code  == 200:
-        return JsonResponse(data, safe=False)
-    else:
-        return JsonResponse({'error': 'Error al obtener paises'}, status=400)
-
-def get_provincias(request, pais_iso2):
-    url = f"https://api.countrystatecity.in/v1/countries/{pais_iso2}/states"
-    headers = {'X-CSCAPI-KEY': settings.CSC_API_KEY}
-    response = req.get(url, headers=headers)
-    data = response.json()
-    if response.status_code  == 200:
-        return JsonResponse(data, safe=False)
-    else:
-        return JsonResponse({'error': 'Error al obtener provincias'}, status=400)
-
-def get_ciudades(request, pais_iso2, provincia_iso2):
-    url = f"https://api.countrystatecity.in/v1/countries/{pais_iso2}/states/{provincia_iso2}/cities"
-    headers = {'X-CSCAPI-KEY': settings.CSC_API_KEY}
-    response = req.get(url, headers=headers)
-    data = response.json()
-    if response.status_code  == 200:
-        return JsonResponse(data, safe=False)
-    else:
-        return JsonResponse({'error': 'Error al obtener ciudades'}, status=400)
