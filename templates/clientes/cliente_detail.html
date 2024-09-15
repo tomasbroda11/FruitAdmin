@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalles del cliente{% endblock %}
+
+{% block content %}
+    <h1>Detalles del Cliente #{{ cliente.id }}</h1>
+    <p><strong>Nombre:</strong> {{ cliente.nombre }} </p>
+    <p><strong>Cuit:</strong> {{ cliente.cuit }} </p>
+    <p><strong>Email:</strong> {{ cliente.email }}</p>
+    <p><strong>Teléfono:</strong> {{ cliente.telefono }}</p>
+    <p><strong>Direccion:</strong> {{ cliente.direccion }}</p>
+        
+    <h3>Pedidos del Cliente</h3>
+    {% if cliente.pedido_set.all %}
+    <ul>
+        {% for pedido in cliente.pedido_set.all %}
+        <li>
+            Pedido #{{ pedido.id }} - Fecha: {{ pedido.fecha }} - 
+            Total: ${{ pedido.precio_total|floatformat:2 }} - 
+            <a href="{% url 'pedido_detail' pedido.id %}" class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Ver detalles</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>Este cliente aún no ha realizado ningún pedido.</p>
+    {% endif %}
+    <a href="{% url 'cliente_list' %}" class="btn btn-secondary">Volver</a>
+    
+{% endblock %}

@@ -6,4 +6,6 @@ urlpatterns = [
     path('alta-producto/', views.productos_create, name='producto_create'),
     path('<int:pk>/', views.productos_detail, name='producto_detail'),
     path('<int:pk>/delete/', views.productos_delete, name='producto_delete'),
+    path('update/', views.productos_update, name='producto_update'),
+    path('api/producto/<int:pk>/', views.productos_api_detail, name='producto_api_detail'),
 ]

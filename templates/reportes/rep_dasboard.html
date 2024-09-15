@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard de reportes{% endblock %}
+
+{% block content %}
+    <h1>Dashboard de reportes</h1>
+    
+    <h3>Estadísticas de Pedidos</h3>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Total de Pedidos</h4>
+            <p>{{ total_pedidos }}</p>
+        </div>
+        <div class="col-md-6">
+            <h4>Total de Ingresos</h4>
+            <p>${{ total_ingresos|floatformat:2 }}</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Pedidos por Mes</h4>
+            <canvas id="pedidosPorMesChart"></canvas>
+        </div>
+        <div class="col-md-6">
+            <h4>Ingresos por Mes</h4>
+            <canvas id="ingresosPorMesChart"></canvas>
+        </div>
+    </div>
+    
+{% endblock %}
