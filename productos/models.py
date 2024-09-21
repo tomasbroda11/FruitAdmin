@@ -11,7 +11,6 @@ class Producto(models.Model):
     ]
 
     nombre = models.CharField(max_length=25, null=False)
-    # Cambiamos cantidad a DecimalField para que soporte tanto enteros como decimales
     cantidad = models.DecimalField(max_digits=10, decimal_places=2, null=False)
     costo = models.DecimalField(max_digits=10, decimal_places=2, null=False)
     porcentaje_ganancia = models.DecimalField(max_digits=5, decimal_places=2, null=False)

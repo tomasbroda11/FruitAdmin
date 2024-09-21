@@ -30,15 +30,15 @@ def productos_detail(request,pk):
 
 def productos_api_detail(request, pk):
     producto = get_object_or_404(Producto, pk=pk)
+
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         data = {
-            'stock_actual': producto.cantidad,  # Asegúrate de que 'cantidad' es el campo correcto
-            'precio_actual': producto.costo,    # Asegúrate de que 'costo' es el campo correcto
+            'stock_actual': producto.cantidad,  
+            'precio_actual': producto.costo, 
         }
-        return JsonResponse(data)
-    return render(request, 'productos/producto_detail.html', {
-        'producto': producto
-    })
+        return JsonResponse(data)  # Devuelve los datos en formato JSON
+
+    return JsonResponse({'error': 'No es una solicitud AJAX'}, status=400)
 
 @require_POST
 def productos_delete(request, pk):
@@ -58,7 +58,7 @@ def productos_update(request):
         form = ProductoUpdateForm(request.POST, instance=producto)
         if form.is_valid():
             form.save()
-            return redirect('productos:producto_list')  # Redirige a la lista de productos después de la actualización
+            return redirect('producto_list')  # Redirige a la lista de productos después de la actualización
     else:
         form = ProductoUpdateForm()
     
