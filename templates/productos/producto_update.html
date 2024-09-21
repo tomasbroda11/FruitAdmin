@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load custom_filters %}
 {% block title %}Actualizar Producto{% endblock %}
 
 {% block content %}
@@ -12,11 +12,11 @@
     </div>
     <div class="form-group">
         <label for="id_stock_actual">Stock Actual</label>
-        {{ producto_form.stock_actual }}
+        <input type="text" name="stock_actual" id="id_stock_actual" class="form-control" value="{{ producto_form.stock_actual.value }}" readonly>
     </div>
     <div class="form-group">
         <label for="id_precio_actual">Precio Actual</label>
-        {{ producto_form.precio_actual }}
+        <input type="text" name="precio_actual" id="id_precio_actual" class="form-control" value="{{ producto_form.precio_actual.value }}" readonly>
     </div>
     <div class="form-group">
         <label for="id_cantidad">Nuevo Stock</label>
@@ -35,20 +35,43 @@ document.addEventListener('DOMContentLoaded', function() {
     const stockActualInput = document.getElementById('id_stock_actual');
     const precioActualInput = document.getElementById('id_precio_actual');
 
+    // Deshabilitar los campos de stock y precio
+    stockActualInput.setAttribute('readonly', true);
+    precioActualInput.setAttribute('readonly', true);
+
     productoSelect.addEventListener('change', function() {
-        const productoId = this.value;
-        if (productoId) {
-            fetch(`/api/producto/${productoId}/`)
-                .then(response => response.json())
-                .then(data => {
-                    stockActualInput.value = data.stock_actual;
-                    precioActualInput.value = data.precio_actual;
-                });
-        } else {
-            stockActualInput.value = '';
-            precioActualInput.value = '';
-        }
-    });
+       const productoId = this.value;
+       if (productoId) {
+           fetch(`/productos/api/producto/${productoId}/`, {
+               method: 'GET',
+               headers: {
+                   'X-Requested-With': 'XMLHttpRequest'
+               }
+           })
+           .then(response => {
+               console.log('Respuesta de la API:', response);  // Agrega esta línea
+               if (!response.ok) {
+                   throw new Error('Error en la respuesta de la API');
+               }
+               return response.json();
+           })
+           .then(data => {
+               console.log('Datos recibidos:', data);  // Agrega esta línea
+               if (data.stock_actual !== undefined && data.precio_actual !== undefined) {
+                   stockActualInput.value = data.stock_actual;
+                   precioActualInput.value = data.precio_actual;
+               } else {
+                   console.error('Datos no válidos:', data);
+               }
+           })
+           .catch(error => {
+               console.error('Hubo un problema con la solicitud fetch:', error);
+           });
+       } else {
+           stockActualInput.value = '';
+           precioActualInput.value = '';
+       }
+   });
 });
 </script>
 {% endblock %}
