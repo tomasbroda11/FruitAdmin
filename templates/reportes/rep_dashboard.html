@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard de reportes{% endblock %}
+
+{% block content %}
+    <h1>Dashboard de reportes</h1>
+    
+    <h3>Estadísticas de Pedidos</h3>
+    
+    <div class="row">
+        <!-- Card para pedidos pendientes -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Pedidos Pendientes</h5>
+                    <p class="card-text">Cantidad: {{ pedidos_pendientes }}</p>
+                    <p class="card-text">S/ {{ pedidos_totales }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card para pedidos de este mes -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Pedidos de este mes</h5>
+                    <p class="card-text">Cantidad: {{ pedidos_mes.total_pedidos }}</p>
+                    <p class="card-text">Total Vendido: ${{ pedidos_mes.total_ventas }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card para pedidos de este año -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Pedidos de este año</h5>
+                    <p class="card-text">Cantidad: {{ pedidos_anio.total_pedidos }}</p>
+                    <p class="card-text">Total Vendido: ${{ pedidos_anio.total_ventas }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Card para el diagrama de torta (Productos más vendidos) -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Productos más vendidos</h5>
+                    <canvas id="productosMasVendidos"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Card para el ranking de clientes con más pedidos -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Clientes con más pedidos</h5>
+                    <ul class="list-group">
+                        {% for cliente in clientes_top %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ cliente.cliente__nombre }}
+                                <span class="badge bg-success rounded-pill">{{ cliente.cantidad_pedidos }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráficos adicionales (pedidos por mes e ingresos por mes) -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Pedidos por Mes</h4>
+                    <canvas id="pedidosPorMesChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Ingresos por Mes</h4>
+                    <canvas id="ingresosPorMesChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+    
+{% endblock %}
