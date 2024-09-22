@@ -3,33 +3,56 @@
 {% block title %}Nuevo Producto{% endblock %}
 
 {% block content %}
-<h2>Nuevo Producto</h2>
-<form method="post">
-    {% csrf_token %}
-    <div class="form-group">
-        {{ form.nombre.label_tag }}
-        {{ form.nombre }}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 50vh;">
+    <div class="card text-bg-light shadow-lg" style="width: 40rem; border-radius: 15px;">
+        <div class="card-header text-center bg-info text-white" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
+            <h4 class="card-title mb-0">Nuevo Producto</h4>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="card-body d-flex flex-column align-items-center px-5 py-4">
+                <div class="row w-100 mb-2 align-items-center justify-content-center">
+                    <label for="nombre" class="col-sm-3 col-form-label p-0 text-end">{{ form.nombre.label_tag }}</label>
+                    <div class="col-sm-8 p-1">
+                        {{ form.nombre }}
+                    </div>
+                </div>
+                <div class="row w-100 mb-2 align-items-center justify-content-center">
+                    <label for="categoria" class="col-sm-3 col-form-label p-0 text-end">{{ form.categoria.label_tag }}</label>
+                    <div class="col-sm-8 p-1">
+                        {{ form.categoria }}
+                    </div>
+                </div>
+                <div class="row w-100 mb-2 align-items-center justify-content-center">
+                    <label for="costo" class="col-sm-3 col-form-label p-0 text-end">{{ form.costo.label_tag }}</label>
+                    <div class="col-sm-8 p-1">
+                        {{ form.costo }}
+                    </div>
+                </div>
+                <div class="row w-100 mb-2 align-items-center justify-content-center">
+                    <label for="tipo_medida" class="col-sm-3 col-form-label p-0 text-end">{{ form.tipo_medida.label_tag }}</label>
+                    <div class="col-sm-8 p-1">
+                        {{ form.tipo_medida }}
+                    </div>
+                </div>
+                <div class="row w-100 mb-2 align-items-center justify-content-center">
+                    <label for="cantidad" class="col-sm-3 col-form-label p-0 text-end">{{ form.cantidad.label_tag }}</label>
+                    <div class="col-sm-8 p-1">
+                        {{ form.cantidad }}
+                    </div>
+                </div>
+                <div class="row w-100 mb-2 align-items-center justify-content-center">
+                    <label for="porcentaje_ganancia" class="col-sm-3 col-form-label p-0 text-end">{{ form.porcentaje_ganancia.label_tag }}</label>
+                    <div class="col-sm-8 p-1">
+                        {{ form.porcentaje_ganancia }}
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between px-5 py-3">
+                <a href="{% url 'producto_list' %}" class="btn btn-secondary btn-lg">Volver</a>
+                <button type="submit" class="btn btn-primary btn-lg">Guardar Producto</button>
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        {{ form.categoria.label_tag }}
-        {{ form.categoria }}
-    </div>
-    <div class="form-group">
-        {{ form.costo.label_tag }}
-        {{ form.costo }}
-    </div>
-    <div class="form-group">
-        {{ form.tipo_medida.label_tag }}
-        {{ form.tipo_medida }}
-    </div>
-    <div class="form-group">
-        {{ form.cantidad.label_tag }}
-        {{ form.cantidad }}
-    </div>
-    <div class="form-group">
-        {{ form.porcentaje_ganancia.label_tag }}
-        {{ form.porcentaje_ganancia }}
-    </div>
-    <button type="submit" class="btn btn-primary">Guardar Producto</button>
-</form>
+</div>
 {% endblock %}
