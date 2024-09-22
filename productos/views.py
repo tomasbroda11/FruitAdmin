@@ -3,6 +3,7 @@ from .models import Producto
 from .forms import Producto, ProductoForm, ProductoUpdateForm
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
+from django.contrib import messages
 
 def productos_list(request):
     productos = Producto.objects.all()
@@ -58,6 +59,7 @@ def productos_update(request):
         form = ProductoUpdateForm(request.POST, instance=producto)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Producto actualizado correctamente')
             return redirect('producto_list')  # Redirige a la lista de productos después de la actualización
     else:
         form = ProductoUpdateForm()

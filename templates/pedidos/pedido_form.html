@@ -7,7 +7,6 @@
 <form method="post">
     {% csrf_token %}
     {{ pedido_form.as_p }}
-
     <h3>Productos</h3>
     <div id="producto-formset">
         {{ producto_formset.management_form }}
@@ -24,6 +23,7 @@
         <label>Precio Total</label>
         <input type="text" id="precio-total" value="0" readonly class="form-control">
     </div>
+    <a href="{% url 'pedido_list' %}" class="btn btn-secondary">Volver</a>
     <button type="submit" class="btn btn-primary">Crear Pedido</button>
     </form>
 
@@ -32,21 +32,16 @@
             var formsetDiv = document.getElementById('producto-formset');
             var totalForms = document.querySelectorAll('#producto-formset .form-group').length;
     
-            // Clonar el último formulario
             var newForm = formsetDiv.querySelector('.form-group:last-child').cloneNode(true);
     
-            // Actualizar el índice del nuevo formulario
             var formRegex = /-(\d+)-/g;
             newForm.innerHTML = newForm.innerHTML.replace(formRegex, `-${totalForms}-`);
     
-            // Limpiar los campos de entrada en el nuevo formulario
             var inputs = newForm.querySelectorAll('input');
             inputs.forEach(input => input.value = '');
     
-            // Agregar el nuevo formulario al formset
             formsetDiv.appendChild(newForm);
     
-            // Actualizar el número total de formularios
             document.getElementById('id_pedidoproducto_set-TOTAL_FORMS').value = totalForms + 1;
         }
     
@@ -55,11 +50,9 @@
             var formGroup = button.closest('.form-group');
             formsetDiv.removeChild(formGroup);
     
-            // Actualizar el número total de formularios
             var totalForms = document.querySelectorAll('#producto-formset .form-group').length;
             document.getElementById('id_pedidoproducto_set-TOTAL_FORMS').value = totalForms;
     
-            // Actualizar los índices de los formularios restantes
             var forms = document.querySelectorAll('#producto-formset .form-group');
             forms.forEach((form, index) => {
                 var formRegex = /-(\d+)-/g;
@@ -68,5 +61,4 @@
         }
     </script>
     
-
 {% endblock %}
