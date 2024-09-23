@@ -2,39 +2,42 @@ from django.shortcuts import render
 from django.db.models import Count, Sum
 from django.utils.timezone import now
 from pedidos.models import Cliente, Pedido, Producto, PedidoProducto
+import json
 
 def dashboard_view(request):
-
     # Consulta de productos más vendidos
     productos_vendidos = PedidoProducto.objects.values('producto__nombre').annotate(total_vendido=Sum('cantidad')).order_by('-total_vendido')[:5]
+
     
-    # Consultar los clientes con más pedidos
+    # Listas para los nombres de productos y sus cantidades
+    nombres_productos = [producto['producto__nombre'] for producto in productos_vendidos]
+    cantidades_vendidas = [producto['total_vendido'] for producto in productos_vendidos]
+
+    # Otras consultas de la vista (ya existentes)
     clientes_top = Pedido.objects.values('cliente__nombre').annotate(cantidad_pedidos=Count('id')).order_by('-cantidad_pedidos')[:5]
     
-    # Obtener el mes actual y el año actual
     today = now()
     current_month = today.month
     current_year = today.year
 
-    # Consultar pedidos hechos este mes
     pedidos_mes = Pedido.objects.filter(fecha__month=current_month).aggregate(
         total_pedidos=Count('id'),
-        total_ventas=Sum('precio_total')  # Cambiar 'total' por 'precio_total'
+        total_ventas=Sum('precio_total')
     )
 
-    # Consultar pedidos hechos este año
     pedidos_anio = Pedido.objects.filter(fecha__year=current_year).aggregate(
         total_pedidos=Count('id'),
-        total_ventas=Sum('precio_total')  # Cambiar 'total' por 'precio_total'
+        total_ventas=Sum('precio_total')
     )
 
-    # Consultar cantidad de pedidos pendientes
     pedidos_pendientes = Pedido.objects.filter(estado='en espera').count()
     pedidos_totales = Pedido.objects.all().count()
 
-    # Crear el contexto con todos los datos
+    # Contexto actualizado con los nombres y cantidades de productos más vendidos
     context = {
         'productos_vendidos': productos_vendidos,
+        'nombres_productos_json': json.dumps(nombres_productos),  # <-- JSON para los nombres
+        'cantidades_vendidas_json': json.dumps(cantidades_vendidas),
         'pedidos_totales': pedidos_totales,
         'clientes_top': clientes_top,
         'pedidos_mes': pedidos_mes,
