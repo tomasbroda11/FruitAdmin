@@ -3,50 +3,62 @@
 {% block title %}Dashboard de reportes{% endblock %}
 
 {% block content %}
-    <h1>Dashboard de reportes</h1>
+    <h1 class="text-center my-4">Dashboard de Reportes</h1>
     
-    <h3>Estadísticas de Pedidos</h3>
+    <h3 class="text-center mb-4">Estadísticas de Pedidos</h3>
     
     <div class="row">
         <!-- Card para pedidos pendientes -->
         <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card">
-                <div class="card-body">
+            <div class="card border-info shadow-sm">
+                <div class="card-body text-info">
                     <h5 class="card-title">Pedidos Pendientes</h5>
-                    <p class="card-text">Cantidad: {{ pedidos_pendientes }}</p>
-                    <p class="card-text">S/ {{ pedidos_totales }}</p>
+                    <p class="card-text">Cantidad: <strong>{{ pedidos_pendientes }}</strong></p>
+                    <p class="card-text">S/ <strong>{{ pedidos_totales }}</strong></p>
+                </div>
+                <div class="card-footer bg-info text-white text-center">
+                    <small>¡Actúa rápido!</small>
                 </div>
             </div>
         </div>
 
         <!-- Card para pedidos de este mes -->
         <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Pedidos de este mes</h5>
-                    <p class="card-text">Cantidad: {{ pedidos_mes.total_pedidos }}</p>
-                    <p class="card-text">Total Vendido: ${{ pedidos_mes.total_ventas }}</p>
+            <div class="card border-success shadow-sm">
+                <div class="card-body text-success">
+                    <h5 class="card-title">Pedidos de este Mes</h5>
+                    <p class="card-text">Cantidad: <strong>{{ pedidos_mes.total_pedidos }}</strong></p>
+                    <p class="card-text">Total Vendido: <strong>${{ pedidos_mes.total_ventas }}</strong></p>
+                </div>
+                <div class="card-footer bg-success text-white text-center">
+                    <small>¡Gran trabajo!</small>
                 </div>
             </div>
         </div>
 
         <!-- Card para pedidos de este año -->
         <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Pedidos de este año</h5>
-                    <p class="card-text">Cantidad: {{ pedidos_anio.total_pedidos }}</p>
-                    <p class="card-text">Total Vendido: ${{ pedidos_anio.total_ventas }}</p>
+            <div class="card border-warning shadow-sm">
+                <div class="card-body text-warning">
+                    <h5 class="card-title">Pedidos de este Año</h5>
+                    <p class="card-text">Cantidad: <strong>{{ pedidos_anio.total_pedidos }}</strong></p>
+                    <p class="card-text">Total Vendido: <strong>${{ pedidos_anio.total_ventas }}</strong></p>
+                </div>
+                <div class="card-footer bg-warning text-dark text-center">
+                    <small>¡Mantente al tanto!</small>
                 </div>
             </div>
         </div>
         
         <!-- Card para el diagrama de torta (Productos más vendidos) -->
         <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Productos más vendidos</h5>
+            <div class="card border-secondary shadow-sm">
+                <div class="card-body text-secondary">
+                    <h5 class="card-title">Productos más Vendidos</h5>
                     <canvas id="productosMasVendidos"></canvas>
+                </div>
+                <div class="card-footer bg-secondary text-white text-center">
+                    <small>Visualiza las tendencias</small>
                 </div>
             </div>
         </div>
@@ -55,40 +67,101 @@
     <div class="row">
         <!-- Card para el ranking de clientes con más pedidos -->
         <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Clientes con más pedidos</h5>
-                    <ul class="list-group">
+            <div class="card border-danger shadow-sm">
+                <div class="card-body text-danger">
+                    <h5 class="card-title">Clientes con Más Pedidos</h5>
+                    <ul class="list-group list-group-flush">
                         {% for cliente in clientes_top %}
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 {{ cliente.cliente__nombre }}
-                                <span class="badge bg-success rounded-pill">{{ cliente.cantidad_pedidos }}</span>
+                                <span class="badge rounded-pill text-white bg-danger">{{ cliente.cantidad_pedidos }}</span>
                             </li>
                         {% endfor %}
                     </ul>
+                </div>
+                <div class="card-footer bg-danger text-white text-center">
+                    <small>¡Reconócelo!</small>
                 </div>
             </div>
         </div>
 
         <!-- Gráficos adicionales (pedidos por mes e ingresos por mes) -->
         <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
+            <div class="card border-primary shadow-sm">
+                <div class="card-body text-primary">
                     <h4>Pedidos por Mes</h4>
                     <canvas id="pedidosPorMesChart"></canvas>
+                </div>
+                <div class="card-footer bg-primary text-white text-center">
+                    <small>Analiza tus ventas</small>
                 </div>
             </div>
         </div>
 
         <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
+            <div class="card border-secondary shadow-sm">
+                <div class="card-body text-secondary">
                     <h4>Ingresos por Mes</h4>
                     <canvas id="ingresosPorMesChart"></canvas>
+                </div>
+                <div class="card-footer bg-secondary text-white text-center">
+                    <small>Planifica tu estrategia</small>
                 </div>
             </div>
         </div>
     </div>
   
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var ctx = document.getElementById('productosMasVendidos').getContext('2d');
+            
+            // Obtener los datos de Django y convertirlos en arrays de JavaScript
+            var nombresProductos = JSON.parse('{{ nombres_productos_json|escapejs }}');
+            var cantidadesVendidas = JSON.parse('{{ cantidades_vendidas_json|escapejs }}');
+            
+            console.log(nombresProductos);  // Verifica que sea un array
+            console.log(cantidadesVendidas);  // Verifica que sea un array
     
+            // Crear el gráfico de torta
+            var chart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: nombresProductos,  // Etiquetas: nombres de productos (debe ser un array)
+                    datasets: [{
+                        label: 'Productos más vendidos',
+                        data: cantidadesVendidas,  // Datos: cantidades vendidas (debe ser un array)
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            enabled: true,
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+    
+        
 {% endblock %}
