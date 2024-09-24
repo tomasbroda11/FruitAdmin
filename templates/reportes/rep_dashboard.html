@@ -119,9 +119,6 @@
             // Obtener los datos de Django y convertirlos en arrays de JavaScript
             var nombresProductos = JSON.parse('{{ nombres_productos_json|escapejs }}');
             var cantidadesVendidas = JSON.parse('{{ cantidades_vendidas_json|escapejs }}');
-            
-            console.log(nombresProductos);  // Verifica que sea un array
-            console.log(cantidadesVendidas);  // Verifica que sea un array
     
             // Crear el gráfico de torta
             var chart = new Chart(ctx, {
@@ -156,6 +153,56 @@
                         },
                         tooltip: {
                             enabled: true,
+                        }
+                    }
+                }
+            });
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            var ctxPedidos = document.getElementById('pedidosPorMesChart').getContext('2d');
+
+            // Obtener los datos desde Django
+            var meses = JSON.parse('{{ meses_json|escapejs }}');
+            var pedidosPorMes = JSON.parse('{{ pedidos_por_mes_json|escapejs }}');
+
+            // Crear gráfico de líneas
+            var pedidosChart = new Chart(ctxPedidos, {
+                type: 'line',
+                data: {
+                    labels: meses,  // Nombres de los meses
+                    datasets: [{
+                        label: 'Pedidos por Mes',
+                        data: pedidosPorMes,  // Cantidad de pedidos
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4  // Líneas más suaves
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false  // Ocultar leyenda
+                        },
+                        tooltip: {
+                            enabled: true
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Meses'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Cantidad de Pedidos'
+                            },
+                            beginAtZero: true  // Iniciar en cero
                         }
                     }
                 }
