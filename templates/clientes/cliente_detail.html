@@ -1,29 +1,38 @@
 {% extends 'base.html' %}
 
-{% block title %}Detalles del cliente{% endblock %}
+{% block title %}Cliente #{{cliente.id}} - {{cliente.nombre}}{% endblock %}
 
 {% block content %}
-    <h1>Detalles del Cliente #{{ cliente.id }}</h1>
-    <p><strong>Nombre:</strong> {{ cliente.nombre }} </p>
-    <p><strong>Cuit:</strong> {{ cliente.cuit }} </p>
-    <p><strong>Email:</strong> {{ cliente.email }}</p>
-    <p><strong>Teléfono:</strong> {{ cliente.telefono }}</p>
-    <p><strong>Direccion:</strong> {{ cliente.direccion }}</p>
-        
-    <h3>Pedidos del Cliente</h3>
-    {% if cliente.pedido_set.all %}
-    <ul>
-        {% for pedido in cliente.pedido_set.all %}
-        <li>
-            Pedido #{{ pedido.id }} - Fecha: {{ pedido.fecha }} - 
-            Total: ${{ pedido.precio_total|floatformat:2 }} - 
-            <a href="{% url 'pedido_detail' pedido.id %}" class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Ver detalles</a>
-        </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p>Este cliente aún no ha realizado ningún pedido.</p>
-    {% endif %}
-    <a href="{% url 'cliente_list' %}" class="btn btn-secondary">Volver</a>
-    
+<div class="d-flex justify-content-center align-items-center" style="min-height: 50vh;">
+    <div class="card text-bg-light shadow-lg" style="width: 40rem; border-radius: 15px;">  <!-- Ancho de la card aumentado -->
+        <div class="card-header text-center bg-info text-white" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
+            <h4 class="card-title mb-0">Detalles del Cliente #{{ cliente.id }}</h4>
+        </div>
+        <div class="card-body px-5 py-4">
+            <p><strong>Nombre:</strong> {{ cliente.nombre }}</p>
+            <p><strong>Cuit:</strong> {{ cliente.cuit }}</p>
+            <p><strong>Email:</strong> {{ cliente.email }}</p>
+            <p><strong>Teléfono:</strong> {{ cliente.telefono }}</p>
+            <p><strong>Dirección:</strong> {{ cliente.direccion }}</p>
+
+            <h5>Pedidos del Cliente</h5>
+            {% if cliente.pedido_set.all %}
+                <ul class="list-unstyled"> <!-- Estilo de lista para mejor visualización -->
+                    {% for pedido in cliente.pedido_set.all %}
+                        <li class="d-flex justify-content-between align-items-center"> <!-- Alineación en una sola línea -->
+                            <span><strong>Pedido</strong> #{{ pedido.id }}</span>
+                            <span><strong> Fecha:</strong> {{ pedido.fecha }}</span><span> <strong>Total:</strong> ${{ pedido.precio_total|floatformat:2 }}</span>
+                            <a href="{% url 'pedido_detail' pedido.id %}" class="badge rounded-pill text-white bg-primary">Ver detalles</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Este cliente aún no ha realizado ningún pedido.</p>
+            {% endif %}
+        </div>
+        <div class="card-footer d-flex justify-content-between px-5 py-3">
+            <a href="{% url 'cliente_list' %}" class="btn btn-secondary">Volver</a>
+        </div>
+    </div>
+</div>
 {% endblock %}
