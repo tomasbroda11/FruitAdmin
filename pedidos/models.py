@@ -1,11 +1,12 @@
 from django.db import models
 from clientes.models import Cliente
 from productos.models import Producto
+from datetime import datetime
 
 class Pedido(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     precio_total = models.DecimalField(max_digits=10, decimal_places=2, null=False, default=0)
-    fecha = models.DateTimeField(auto_now_add=True)
+    fecha = models.DateTimeField(default=datetime.now)
     estado = models.TextField(default='en espera')
 
     def __str__(self):

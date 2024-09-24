@@ -35,31 +35,25 @@ def pedido_create(request):
         producto_formset = PedidoProductoFormSet(request.POST)
         
         if pedido_form.is_valid() and producto_formset.is_valid():
-            # Crear el pedido pero sin guardar en la base de datos aún
             pedido = pedido_form.save(commit=False)
 
-            # Asignar el cliente al pedido
             cliente = pedido_form.cleaned_data.get('cliente')
             if cliente:
                 pedido.cliente = cliente
             else:
                 print("No se seleccionó cliente correctamente")
 
-            pedido.precio_total = 0  # Inicializamos el precio total
-
-            # Guardamos el pedido en la base de datos con el cliente ya asignado
+            pedido.precio_total = 0  
             pedido.save()
 
-            # Procesar los productos del pedido
             for producto_form in producto_formset:
                 producto = producto_form.cleaned_data.get('producto')
                 cantidad = producto_form.cleaned_data.get('cantidad')
                 
                 if producto and cantidad:
                     PedidoProducto.objects.create(pedido=pedido, producto=producto, cantidad=cantidad)
-                    pedido.precio_total += producto.costo * cantidad  # Sumar al precio total
+                    pedido.precio_total += producto.costo * cantidad  
 
-            # Guardamos el pedido nuevamente con el precio total actualizado
             pedido.save()
 
             return redirect('pedido_list')
