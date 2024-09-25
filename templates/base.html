@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Fruit admin{% endblock %}</title>
+    <link rel="shortcut icon" href="\static\logoFruit.png" />
     <!-- Bootstrap CSS -->
     {%load static%}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -11,7 +12,11 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="#"><img src="{% static 'logoFruit.png' %}" width="30" height="30" > FruitAdmin</a>
-        <div class="collapse navbar-collapse">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
                     <a class="nav-item nav-link" href="{% url 'pedido_list' %}">Pedidos</a>
@@ -25,6 +30,23 @@
                 <li class="nav-item active">
                     <a class="nav-item nav-link" href="{% url 'dashboard' %}">Reportes</a>
                 </li>
+            </ul>
+            <ul class="navbar-nav ml-auto"> <!-- Alinea a la derecha -->
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link"><strong> {{ user.first_name }} {{user.last_name}}</strong></a>
+                    </li>
+                    <li class="nav-item">
+                        <form method="POST" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-link nav-link" style="text-decoration: none;">Logout</button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </nav>
