@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Cliente
-from .forms import Cliente, ClienteForm
+from .forms import Cliente, ClienteForm, ClienteUpdateForm
 from django.http import JsonResponse
 from django.conf import settings
 import requests as req
 from django.views.decorators.http import require_POST
+from django.contrib import messages
 
 def clientes_list(request):
     clientes = Cliente.objects.all()
@@ -38,3 +39,15 @@ def clientes_delete(request, pk):
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
+def clientes_update(request, pk):
+    cliente = get_object_or_404(Cliente, id=pk)  # Obtiene el cliente o retorna un 404 si no existe
+    if request.method == 'POST':
+        form = ClienteUpdateForm(request.POST, instance=cliente)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'El cliente fue actualizado correctamente!')
+            return redirect('cliente_list')  # Redirige a la lista de clientes o a la vista que prefieras
+    else:
+        form = ClienteUpdateForm(instance=cliente)
+
+    return render(request, 'clientes/cliente_update.html', {'form': form, 'cliente': cliente})
