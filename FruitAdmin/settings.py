@@ -1,6 +1,5 @@
 from pathlib import Path
 import os
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -15,7 +14,6 @@ SECRET_KEY = 'django-insecure-*6clw7pp*yhz-x1z)72b4rzxl$(1c&u9h$9qeb2%o4y^82j$ys
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -42,6 +40,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'middleware.LoginRequiredMiddleware',
 ]
 
 ROOT_URLCONF = 'FruitAdmin.urls'
@@ -113,7 +112,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-
+LOGIN_URL = '/pedidos'  # URL para la página de inicio de sesión
+LOGIN_REDIRECT_URL = '/pedidos/'  # URL de redirección después de iniciar sesión
+LOGOUT_REDIRECT_URL = '/login/'  # URL de redirección después de cerrar sesión
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

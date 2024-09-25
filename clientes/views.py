@@ -6,7 +6,9 @@ from django.conf import settings
 import requests as req
 from django.views.decorators.http import require_POST
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def clientes_list(request):
     clientes = Cliente.objects.all()
     return render(request,'clientes/cliente_list.html',{'clientes': clientes})

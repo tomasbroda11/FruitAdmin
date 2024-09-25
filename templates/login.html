@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Iniciar Sesión{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center">
+    <div class="card shadow-lg p-4 col-lg-4 col-md-6 col-sm-8" style="min-width: 50vh; border-radius: 25px;">
+        <div class="card-body">
+            <h3 class="text-center mb-4">Bienvenido de nuevo</h3>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="username" class="form-label">Usuario</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Ingresa tu usuario" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Ingresa tu contraseña" required>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <a href="#" class="text-muted">¿Olvidaste tu contraseña?</a>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2">Iniciar Sesión</button>
+            </form>
+            <hr class="my-4">
+            <div class="text-center">
+                <p>¿No tienes una cuenta? <a href="#">Regístrate aquí</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+    }
+   
+</style>
+{% endblock %}
