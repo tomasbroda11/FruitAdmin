@@ -109,6 +109,11 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Configura la sesión para que expire cuando se cierre el navegador
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Expira la sesión después de 5 minutos de inactividad
+SESSION_COOKIE_AGE = 1800  # en segundos (5 minutos)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
