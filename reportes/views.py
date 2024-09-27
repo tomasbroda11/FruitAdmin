@@ -31,10 +31,12 @@ def dashboard_view(request):
     ventas_por_mes_montos = [
             {
                 'mes': venta['mes'].strftime('%Y-%m'),  # Formatear el mes como cadena 'YYYY-MM'
-                'total_ventas': float(venta['total_ventas'])  # Convertir Decimal a float
+                'total_ventas': float(venta['total_ventas'] or 0)  # Convertir Decimal a float
             }
             for venta in ventas_por_mes
         ]
+
+    productos_menos_vendidos = PedidoProducto.objects.values('producto__nombre', 'producto__precio').annotate(total_vendido=Sum('cantidad')).order_by('total_vendido')[:5]
 
     # Contexto actualizado con los nombres y cantidades de productos más vendidos
     context = {
@@ -42,13 +44,14 @@ def dashboard_view(request):
         'nombres_productos_json': json.dumps(nombres_productos),  # JSON para los nombres
         'cantidades_vendidas_json': json.dumps(cantidades_vendidas),
         'pedidos_totales': Pedido.objects.count(),
-        'clientes_top': Pedido.objects.values('cliente__nombre').annotate(cantidad_pedidos=Count('id')).order_by('-cantidad_pedidos')[:5],
+        'clientes_top': clientes_top,
         'pedidos_mes': Pedido.objects.filter(fecha__month=today.month).aggregate(total_pedidos=Count('id'), total_ventas=Sum('precio_total')),
         'pedidos_anio': Pedido.objects.filter(fecha__year=current_year).aggregate(total_pedidos=Count('id'), total_ventas=Sum('precio_total')),
         'pedidos_pendientes': Pedido.objects.filter(estado='en espera').count(),
         'meses_json': json.dumps(meses),  # Meses para Chart.js
         'pedidos_por_mes_json': json.dumps(pedidos_por_mes_cantidad),  # Cantidades de pedidos por mes
         'ventas_por_mes_json': json.dumps(ventas_por_mes_montos),  # Montos de ventas por mes
+        'productos_menos_vendidos': productos_menos_vendidos,
     }
 
     return render(request, 'reportes/rep_dashboard.html', context)
