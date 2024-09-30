@@ -50,41 +50,55 @@
             </div>
         </div>
         
-    </div>
-        <!-- Card Productos más vendidos -->
-        <div class="mb-4" style="max-width: 28rem ;"> 
-            <div class="card border-secondary shadow-sm">
-                <div class="card-body text-secondary">
-                    <h5 class="card-title">Productos más Vendidos</h5>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Cantidad Vendida</th>
-                                <th>Total Vendido ($)</th>
-                                <th>Promedio Mensual</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for producto in productos_vendidos %}
-                            <tr>
-                                <td>{{ producto.producto__nombre }}</td>
-                                <td>{{ producto.total_vendido }}</td>
-                                <td>${{ producto.total_dinero|floatformat:2 }}</td>
-                                <td>{{ producto.promedio_mensual|floatformat:2 }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <div class="card-footer bg-secondary text-white text-center">
-                    <small>Actualizado Mensualmente</small>
+        <div class="row mb-4"> <!-- Nueva fila para alinear las cards -->
+            <!-- Card Productos más Vendidos -->
+            <div class="col-md-6 mb-4"> <!-- Ajustar a 6 columnas en pantallas medianas -->
+                <div class="card border-secondary shadow-sm">
+                    <div class="card-body text-secondary">
+                        <h5 class="card-title">Productos más Vendidos</h5>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Cantidad Vendida</th>
+                                    <th>Total Vendido ($)</th>
+                                    <th>Promedio Mensual</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for producto in productos_vendidos %}
+                                <tr>
+                                    <td>{{ producto.producto__nombre }}</td>
+                                    <td>{{ producto.total_vendido }}</td>
+                                    <td>${{ producto.total_dinero|floatformat:2 }}</td>
+                                    <td>{{ producto.promedio_mensual|floatformat:2 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer bg-secondary text-white text-center">
+                        <small>Actualizado Mensualmente</small>
+                    </div>
                 </div>
             </div>
-        </div>
-                       
+        
+            <!-- Card Pedidos por Mes -->
+            <div class="col-md-6 mb-4"> <!-- Ajustar a 6 columnas en pantallas medianas -->
+                <div class="card border-primary shadow-sm">
+                    <div class="card-body text-primary">
+                        <h4>Pedidos por Mes</h4>
+                        <canvas id="pedidosPorMesChart"></canvas>
+                    </div>
+                    <div class="card-footer bg-primary text-white text-center">
+                        <small>Analiza tus ventas</small>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- Fin de la fila -->
+        
+        
     
-    <div class="row">
         <!-- Card para el ranking de clientes con más pedidos -->
         <div class="col-md-6">
             <div class="card border-danger shadow-sm">
@@ -105,22 +119,10 @@
             </div>
         </div>
 
-        <!-- Gráficos adicionales (pedidos por mes e ingresos por mes) -->
-        <div class="col-md-6">
-            <div class="card border-primary shadow-sm">
-                <div class="card-body text-primary">
-                    <h4>Pedidos por Mes</h4>
-                    <canvas id="pedidosPorMesChart"></canvas>
-                </div>
-                <div class="card-footer bg-primary text-white text-center">
-                    <small>Analiza tus ventas</small>
-                </div>
-            </div>
-        </div>
 
         
         <!-- Gráfico de barras para las ventas por mes -->
-        <div class="col-md-6"> 
+        <div class="col-md-6" style="padding-bottom: 5rem;"> 
             <div class="card border-secondary shadow-sm" >
                 <div class="card-body text-secondary">
                     <h4>Ingresos por Mes</h4>
@@ -131,10 +133,7 @@
                 </div>
             </div>
         </div>
-        
-               
-    </div>
-  
+                       
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
