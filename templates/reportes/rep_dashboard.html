@@ -50,20 +50,39 @@
             </div>
         </div>
         
-        <!-- Card para el diagrama de torta (Productos más vendidos) -->
-        <div class="col-md-6 col-lg-3 mb-4">
+    </div>
+        <!-- Card Productos más vendidos -->
+        <div class="mb-4" style="max-width: 28rem ;"> 
             <div class="card border-secondary shadow-sm">
                 <div class="card-body text-secondary">
                     <h5 class="card-title">Productos más Vendidos</h5>
-                    <canvas id="productosMasVendidos"></canvas>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad Vendida</th>
+                                <th>Total Vendido ($)</th>
+                                <th>Promedio Mensual</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for producto in productos_vendidos %}
+                            <tr>
+                                <td>{{ producto.producto__nombre }}</td>
+                                <td>{{ producto.total_vendido }}</td>
+                                <td>${{ producto.total_dinero|floatformat:2 }}</td>
+                                <td>{{ producto.promedio_mensual|floatformat:2 }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
                 <div class="card-footer bg-secondary text-white text-center">
-                    <small>Visualiza las tendencias</small>
+                    <small>Actualizado Mensualmente</small>
                 </div>
-                
             </div>
         </div>
-    </div>
+                       
     
     <div class="row">
         <!-- Card para el ranking de clientes con más pedidos -->
@@ -118,51 +137,6 @@
   
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var ctx = document.getElementById('productosMasVendidos').getContext('2d');
-            
-            // Obtener los datos de Django y convertirlos en arrays de JavaScript
-            var nombresProductos = JSON.parse('{{ nombres_productos_json|escapejs }}');
-            var cantidadesVendidas = JSON.parse('{{ cantidades_vendidas_json|escapejs }}');
-    
-            // Crear el gráfico de torta
-            var chart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: nombresProductos,  // Etiquetas: nombres de productos (debe ser un array)
-                    datasets: [{
-                        label: 'Productos más vendidos',
-                        data: cantidadesVendidas,  // Datos: cantidades vendidas (debe ser un array)
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        tooltip: {
-                            enabled: true,
-                        }
-                    }
-                }
-            });
-        });
         document.addEventListener('DOMContentLoaded', function() {
             var ctxPedidos = document.getElementById('pedidosPorMesChart').getContext('2d');
 

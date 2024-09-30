@@ -12,7 +12,22 @@ def dashboard_view(request):
     today = now()
     current_month = today.month
     current_year = today.year      
-    productos_vendidos = PedidoProducto.objects.values('producto__nombre').annotate(total_vendido=Sum('cantidad')).order_by('-total_vendido')[:5]
+    
+    # Calcular el número de meses transcurridos desde que se comenzó a registrar ventas
+    first_order = Pedido.objects.earliest('fecha')
+    meses_transcurridos = (today.year - first_order.fecha.year) * 12 + (today.month - first_order.fecha.month + 1)
+
+    # Consulta de productos más vendidos
+    productos_vendidos = (
+        PedidoProducto.objects
+        .values('producto__nombre')
+        .annotate(
+            total_vendido=Sum('cantidad'),
+            total_dinero=Sum('cantidad') * Sum('producto__costo'),
+            promedio_mensual=Sum('cantidad') / meses_transcurridos  
+        )
+        .order_by('-total_vendido')[:5]
+    )
 
     # Listas para los nombres de productos y sus cantidades
     nombres_productos = [producto['producto__nombre'] for producto in productos_vendidos]
@@ -36,7 +51,7 @@ def dashboard_view(request):
             for venta in ventas_por_mes
         ]
 
-    productos_menos_vendidos = PedidoProducto.objects.values('producto__nombre', 'producto__precio').annotate(total_vendido=Sum('cantidad')).order_by('total_vendido')[:5]
+    productos_menos_vendidos = PedidoProducto.objects.values('producto__nombre', 'producto__costo').annotate(total_vendido=Sum('cantidad')).order_by('total_vendido')[:5]
 
     # Contexto actualizado con los nombres y cantidades de productos más vendidos
     context = {
