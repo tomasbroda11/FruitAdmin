@@ -1,62 +1,61 @@
 {% extends 'base.html' %}
 
-{% block title %}Dashboard de reportes{% endblock %}
+{% block title %}Dashboard de Reportes{% endblock %}
 
 {% block content %}
-    <h1 class="text-center my-4">Dashboard de Reportes</h1>
-    
-    <h3 class="text-center mb-4">Estadísticas de Pedidos</h3>
-    
-    <div class="row">
-        <!-- Card para pedidos pendientes -->
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card border-info shadow-sm">
-                <div class="card-body text-info">
-                    <h5 class="card-title">Pedidos Pendientes</h5>
-                    <p class="card-text">Cantidad: <strong>{{ pedidos_pendientes }}</strong></p>
-                    <p class="card-text">S/ <strong>{{ pedidos_totales }}</strong></p>
-                </div>
-                <div class="card-footer bg-info text-white text-center">
-                    <small>¡Actúa rápido!</small>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card para pedidos de este mes -->
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card border-success shadow-sm">
-                <div class="card-body text-success">
-                    <h5 class="card-title">Pedidos de este Mes</h5>
-                    <p class="card-text">Cantidad: <strong>{{ pedidos_mes.total_pedidos }}</strong></p>
-                    <p class="card-text">Total Vendido: <strong>${{ pedidos_mes.total_ventas }}</strong></p>
-                </div>
-                <div class="card-footer bg-success text-white text-center">
-                    <small>¡Gran trabajo!</small>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card para pedidos de este año -->
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card border-warning shadow-sm">
-                <div class="card-body text-warning">
-                    <h5 class="card-title">Pedidos de este Año</h5>
-                    <p class="card-text">Cantidad: <strong>{{ pedidos_anio.total_pedidos }}</strong></p>
-                    <p class="card-text">Total Vendido: <strong>${{ pedidos_anio.total_ventas }}</strong></p>
-                </div>
-                <div class="card-footer bg-warning text-dark text-center">
-                    <small>¡Mantente al tanto!</small>
-                </div>
-            </div>
-        </div>
+    <div class="container my-4">
+        <h1 class="text-center my-4">Dashboard de Reportes</h1>
+        <h3 class="text-center mb-4">Estadísticas de Pedidos</h3>
         
-        <div class="row mb-4"> <!-- Nueva fila para alinear las cards -->
-            <!-- Card Productos más Vendidos -->
-            <div class="col-md-6 mb-4"> <!-- Ajustar a 6 columnas en pantallas medianas -->
-                <div class="card border-secondary shadow-sm">
+        <div class="row">
+            <!-- Primera fila de cards -->
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card border-info shadow-lg rounded-3">
+                    <div class="card-body text-info">
+                        <h5 class="card-title">Pedidos Pendientes</h5>
+                        <p class="card-text">Cantidad: <strong>{{ pedidos_pendientes }}</strong></p>
+                        <p class="card-text">S/ <strong>{{ pedidos_totales }}</strong></p>
+                    </div>
+                    <div class="card-footer bg-info text-white text-center rounded-bottom">
+                        <small>¡Actúa rápido!</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card border-success shadow-lg rounded-3">
+                    <div class="card-body text-success">
+                        <h5 class="card-title">Pedidos de este Mes</h5>
+                        <p class="card-text">Cantidad: <strong>{{ pedidos_mes.total_pedidos }}</strong></p>
+                        <p class="card-text">Total Vendido: <strong>${{ pedidos_mes.total_ventas }}</strong></p>
+                    </div>
+                    <div class="card-footer bg-success text-white text-center rounded-bottom">
+                        <small>¡Gran trabajo!</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card border-warning shadow-lg rounded-3">
+                    <div class="card-body text-warning">
+                        <h5 class="card-title">Pedidos de este Año</h5>
+                        <p class="card-text" id="cantMes">Cantidad: <strong>{{ pedidos_anio.total_pedidos }}</strong></p>
+                        <p class="card-text" id="totalMes">Total Vendido: <strong>${{ pedidos_anio.total_ventas }}</strong></p>
+                    </div>
+                    <div class="card-footer bg-warning text-dark text-center rounded-bottom">
+                        <small>¡Mantente al tanto!</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Segunda fila de cards con gráficos -->
+            <div class="col-md-6 mb-4">
+                <div class="card border-secondary shadow-lg rounded-3 h-100">
                     <div class="card-body text-secondary">
                         <h5 class="card-title">Productos más Vendidos</h5>
-                        <table class="table table-striped">
+                        <table class="table table-striped table-responsive">
                             <thead>
                                 <tr>
                                     <th>Producto</th>
@@ -77,63 +76,62 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="card-footer bg-secondary text-white text-center">
+                    <div class="card-footer bg-secondary text-white text-center rounded-bottom">
                         <small>Actualizado Mensualmente</small>
                     </div>
                 </div>
             </div>
-        
-            <!-- Card Pedidos por Mes -->
-            <div class="col-md-6 mb-4"> <!-- Ajustar a 6 columnas en pantallas medianas -->
-                <div class="card border-primary shadow-sm">
+
+            <!-- Gráfico Pedidos por Mes -->
+            <div class="col-md-6 mb-4">
+                <div class="card border-primary shadow-lg rounded-3 h-100">
                     <div class="card-body text-primary">
                         <h4>Pedidos por Mes</h4>
                         <canvas id="pedidosPorMesChart"></canvas>
                     </div>
-                    <div class="card-footer bg-primary text-white text-center">
+                    <div class="card-footer bg-primary text-white text-center rounded-bottom">
                         <small>Analiza tus ventas</small>
                     </div>
                 </div>
             </div>
-        </div> <!-- Fin de la fila -->
-        
-        
-    
-        <!-- Card para el ranking de clientes con más pedidos -->
-        <div class="col-md-6">
-            <div class="card border-danger shadow-sm">
-                <div class="card-body text-danger">
-                    <h5 class="card-title">Clientes con Más Pedidos</h5>
-                    <ul class="list-group list-group-flush">
-                        {% for cliente in clientes_top %}
+        </div>
+
+        <div class="row">
+            <!-- Tercera fila de cards -->
+            <div class="col-md-6 mb-4">
+                <div class="card border-danger shadow-lg rounded-3">
+                    <div class="card-body text-danger">
+                        <h5 class="card-title">Clientes con Más Pedidos</h5>
+                        <ul class="list-group list-group-flush">
+                            {% for cliente in clientes_top %}
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 {{ cliente.cliente__nombre }}
                                 <span class="badge rounded-pill text-white bg-danger">{{ cliente.cantidad_pedidos }}</span>
                             </li>
-                        {% endfor %}
-                    </ul>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="card-footer bg-danger text-white text-center rounded-bottom">
+                        <small>¡Reconócelo!</small>
+                    </div>
                 </div>
-                <div class="card-footer bg-danger text-white text-center">
-                    <small>¡Reconócelo!</small>
+            </div>
+
+            <!-- Gráfico de Ingresos por Mes -->
+            <div class="col-md-6 mb-4">
+                <div class="card border-secondary shadow-lg rounded-3">
+                    <div class="card-body text-secondary">
+                        <h4>Ingresos por Mes</h4>
+                        <canvas id="ingresosPorMesChart"></canvas> 
+                    </div>
+                    <div class="card-footer bg-secondary text-white text-center rounded-bottom">
+                        <small>Planifica tu estrategia</small>
+                    </div>
                 </div>
             </div>
         </div>
-
-
-        
-        <!-- Gráfico de barras para las ventas por mes -->
-        <div class="col-md-6" style="padding-bottom: 5rem;"> 
-            <div class="card border-secondary shadow-sm" >
-                <div class="card-body text-secondary">
-                    <h4>Ingresos por Mes</h4>
-                    <canvas id="ingresosPorMesChart"></canvas> 
-                </div>
-                <div class="card-footer bg-secondary text-white text-center">
-                    <small>Planifica tu estrategia</small>
-                </div>
-            </div>
-        </div>
-                       
+    </div>
+                
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -195,8 +193,6 @@
             var ventasPorMes = ventasPorMesData.map(function(item) {
                 return item.total_ventas;
             });
-            console.log(meses);
-            console.log(ventasPorMes);
             // Crear gráfico de barras para los ingresos
             var ingresosChart = new Chart(ctxIngresos, {
                 type: 'bar',
