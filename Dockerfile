@@ -3,6 +3,7 @@ FROM python:3.11
 
 # Establece el directorio de trabajo
 WORKDIR /app
+COPY .env /app/
 
 # Copia los archivos de la app al contenedor
 COPY . /app/
