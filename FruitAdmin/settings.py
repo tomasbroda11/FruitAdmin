@@ -125,7 +125,7 @@ SESSION_COOKIE_AGE = 1800  # en segundos (5 minutos)
 LOGIN_URL = '/pedidos'  # URL para la página de inicio de sesión
 LOGIN_REDIRECT_URL = '/pedidos/'  # URL de redirección después de iniciar sesión
 LOGOUT_REDIRECT_URL = '/login/'  # URL de redirección después de cerrar sesión
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Default primary key field type
