@@ -16,9 +16,9 @@ DEBUG = False
 PORT = os.getenv('PORT', '8000')
 ALLOWED_HOSTS = ['fruitadmin-production.up.railway.app']
 CSRF_TRUSTED_ORIGINS = ['https://fruitadmin-production.up.railway.app']
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
+SECURE_SSL_REDIRECT = False
 
 # Application definition
 
