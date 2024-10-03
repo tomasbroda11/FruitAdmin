@@ -14,7 +14,11 @@ SECRET_KEY = 'django-insecure-*6clw7pp*yhz-x1z)72b4rzxl$(1c&u9h$9qeb2%o4y^82j$ys
 DEBUG = False
 
 PORT = os.getenv('PORT', '8000')
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['fruitadmin-production.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://fruitadmin-production.up.railway.app']
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
 
 # Application definition
 
