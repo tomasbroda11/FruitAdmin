@@ -1,5 +1,7 @@
 from pathlib import Path
 import os
+from decouple import config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -8,10 +10,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*6clw7pp*yhz-x1z)72b4rzxl$(1c&u9h$9qeb2%o4y^82j$ys'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 PORT = os.getenv('PORT', '8000')
 ALLOWED_HOSTS = ['localhost','fruitadmin-production.up.railway.app']
@@ -77,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql', 
         'NAME': 'railway',
         'USER': 'root',
-        'PASSWORD': 'MKAYVjnFyoGHnTGAwTfqyTHYyyNfGfQJ',
+        'PASSWORD': config('DB_PASSWORD'),
         'HOST': 'junction.proxy.rlwy.net',  
         'PORT': '36438',       
     }
@@ -102,7 +104,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-CSC_API_KEY = 'TXA5OHRwZEdVYUd5QnBrYWlvZ1Nlc2xya21zanFrQ3BneWxCU2h3VQ=='
+CSC_API_KEY = config('CSC_API_KEY')
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
