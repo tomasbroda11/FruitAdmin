@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-*6clw7pp*yhz-x1z)72b4rzxl$(1c&u9h$9qeb2%o4y^82j$ys
 DEBUG = True
 
 PORT = os.getenv('PORT', '8000')
-ALLOWED_HOSTS = ['fruitadmin-production.up.railway.app']
+ALLOWED_HOSTS = ['localhost','fruitadmin-production.up.railway.app']
 CSRF_TRUSTED_ORIGINS = ['https://fruitadmin-production.up.railway.app']
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
@@ -74,12 +74,12 @@ WSGI_APPLICATION = 'FruitAdmin.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  # Para PyMySQL usa 'django.db.backends.mysql' con el conector 'mysqlclient'
-        'NAME': 'verduleriadb',
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': 'railway',
         'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',  # O la dirección IP si es un servidor remoto
-        'PORT': '3306',       # El puerto por defecto de MySQL
+        'PASSWORD': 'MKAYVjnFyoGHnTGAwTfqyTHYyyNfGfQJ',
+        'HOST': 'junction.proxy.rlwy.net',  
+        'PORT': '36438',       
     }
 }
 
