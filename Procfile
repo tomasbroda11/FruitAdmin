@@ -1,1 +1,1 @@
-web: gunicorn FruitAdmin.wsgi
+web: gunicorn FruitAdmin.wsgi --no-cache-dir
