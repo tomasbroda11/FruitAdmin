@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Producto
-from .forms import Producto, ProductoForm, ProductoUpdateForm
+from .models import Producto, Categoria
+from .forms import Producto, ProductoForm, ProductoUpdateForm,CargarExcelForm
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.contrib import messages
+import pandas as pd
 
 def productos_list(request):
     productos = Producto.objects.all()
@@ -65,3 +66,42 @@ def productos_update(request):
         form = ProductoUpdateForm()
     
     return render(request, 'productos/producto_update.html', {'producto_form': form})
+
+def productos_upload_excel(request):
+    if request.method == 'POST':
+        form = CargarExcelForm(request.POST, request.FILES)
+        if form.is_valid():
+            excel_file = request.FILES['file']
+
+            try:
+                df = pd.read_excel(excel_file, engine='openpyxl')
+
+                required_columns = ['nombre', 'categoria', 'costo', 'cantidad', 'porcentaje_ganancia', 'tipo_medida']
+                if not all(col in df.columns for col in required_columns):
+                    messages.error(request, 'El archivo Excel no contiene las columnas requeridas.')
+                    return redirect('producto_upload_excel')
+
+                # Procesar cada fila del DataFrame y guardar los productos
+                for _, row in df.iterrows():
+                    categoria = Categoria.objects.get(nombre=row['categoria'])  # Busca la categoría
+                    producto = Producto(
+                        nombre=row['nombre'],
+                        categoria=categoria,
+                        costo=row['costo'],
+                        cantidad=row['cantidad'],
+                        porcentaje_ganancia=row['porcentaje_ganancia'],
+                        tipo_medida=row['tipo_medida']
+                    )
+                    producto.save()
+
+                messages.success(request, 'Productos cargados exitosamente.')
+                return redirect('producto_list')
+
+            except Exception as e:
+                messages.error(request, f'Error al procesar el archivo: {str(e)}')
+                return redirect('producto_upload_excel')
+
+    else:
+        form = CargarExcelForm()
+
+    return render(request, 'productos/producto_upload_excel.html', {'form': form})

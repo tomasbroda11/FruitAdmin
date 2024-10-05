@@ -26,3 +26,7 @@ class ProductoUpdateForm(forms.ModelForm):
             'cantidad': forms.NumberInput(attrs={'class': 'form-control', 'step': 'any'}),
         }
 
+
+class CargarExcelForm(forms.Form):
+    archivo = forms.FileField(label='Seleccione el archivo', widget=forms.FileInput(attrs={'class': 'form-control'}))
+    

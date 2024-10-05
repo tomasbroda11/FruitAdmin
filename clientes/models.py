@@ -12,3 +12,4 @@ class Cliente(models.Model):
         return self.nombre
 
 
+  
