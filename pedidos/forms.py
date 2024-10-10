@@ -9,7 +9,7 @@ class PedidoForm(forms.ModelForm):
     
     class Meta:
         model = Pedido
-        fields = ['cliente']
+        fields = ['cliente', 'estado']
 
 class PedidoProductoForm(forms.ModelForm):
     class Meta:

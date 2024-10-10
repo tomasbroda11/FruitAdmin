@@ -42,6 +42,13 @@ def pedido_create(request):
                 pedido.cliente = cliente
             else:
                 print("No se seleccionó cliente correctamente")
+            
+            # Asignar estado (por defecto "en espera" si no se selecciona ninguno)
+            estado = pedido_form.cleaned_data.get('estado')
+            if not estado:
+                pedido.estado = 'en_espera'
+            else:
+                pedido.estado = estado
 
             pedido.precio_total = 0  
             pedido.save()
@@ -66,13 +73,9 @@ def pedido_create(request):
         'producto_formset': producto_formset,
     })
 
-
-
 def nuevo_pedido(request):
     productos = Producto.objects.all()
     return render(request, 'nuevo_pedido.html', {'productos': productos})
-
-
 
 def get_productos(request):
     productos = Producto.objects.all()

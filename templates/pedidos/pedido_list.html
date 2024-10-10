@@ -10,7 +10,7 @@
         <tr>
             <th>Id pedido</th>
             <th>Cliente</th>
-            <th>Fecha de Creación</th>
+            <th>Fecha</th>
             <th>Precio Total</th>
             <th>Estado</th>
             <th>Acciones</th>
@@ -23,7 +23,17 @@
             <td>{{pedido.cliente.nombre}}</td>
             <td>{{ pedido.fecha }}</td>
             <td>${{ pedido.precio_total }}</td>
-            <td>{{pedido.estado}}</td>
+            <td>
+                {% if pedido.estado == 'en_espera' or pedido.estado == "en espera" %}
+                    <span class="badge bg-warning text-dark">En espera</span>
+                {% elif pedido.estado == 'procesado' %}
+                    <span class="badge bg-info">Procesado</span>
+                {% elif pedido.estado == 'entregado' %}
+                    <span class="badge bg-success">Entregado</span>
+                {% else %}
+                    <span class="badge bg-secondary">Desconocido</span>
+                {% endif %}
+            </td>
             <td>
                 <a href="{% url 'pedido_detail' pedido.pk %}" class="btn btn-outline-info">Ver</a>
                 <a href="#" class="btn btn-outline-danger" data-pedido-pk="{{ pedido.pk }}" onclick="deletePedido(this)">Eliminar</a>
