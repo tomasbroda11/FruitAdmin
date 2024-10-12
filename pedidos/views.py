@@ -64,14 +64,21 @@ def pedido_create(request):
             pedido.save()
 
             return redirect('pedido_list')
+        else:
+            # Imprimir los errores en la consola
+            print("Errores en el formulario de pedido:", pedido_form.errors)
+            print("Errores en el formset de productos:", producto_formset.errors)
     else:
         pedido_form = PedidoForm()
         producto_formset = PedidoProductoFormSet()
+
     
     return render(request, 'pedidos/pedido_form.html', {
         'pedido_form': pedido_form,
         'producto_formset': producto_formset,
     })
+
+
 
 def nuevo_pedido(request):
     productos = Producto.objects.all()

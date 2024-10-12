@@ -14,6 +14,15 @@ class ProductoForm(forms.ModelForm):
             'tipo_medida': forms.RadioSelect(choices=Producto.TIPO_MEDIDA_CHOICES),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Añadir data-precio a cada opción del select
+        self.fields['producto'].widget.attrs.update({'class': 'producto-select'})
+        self.fields['producto'].choices = [
+            (producto.id, f'{producto.nombre} (Precio: {producto.costo})') 
+            for producto in Producto.objects.all()
+        ]
+
 class ProductoUpdateForm(forms.ModelForm):
     producto = forms.ModelChoiceField(queryset=Producto.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
     stock_actual = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))

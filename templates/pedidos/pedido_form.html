@@ -1,64 +1,138 @@
 {% extends 'base.html' %}
 
 {% block title %}Nuevo Pedido{% endblock %}
-
+{% load form_filters %}
 {% block content %}
-<h2>Nuevo Pedido</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ pedido_form.as_p }}
-    <h3>Productos</h3>
-    <div id="producto-formset">
-        {{ producto_formset.management_form }}
-        {% for form in producto_formset.forms %}
-            <div class="form-group">
-                {{ form.producto.label_tag }} {{ form.producto }}
-                {{ form.cantidad.label_tag }} {{ form.cantidad }}
-                <button type="button" class="btn btn-danger" onclick="removeForm(this)">Eliminar</button>
+<div class="container">
+    <h2>Nuevo Pedido</h2>
+    <form method="post">
+        {% csrf_token %}
+        <!-- Bloque para mostrar mensajes de error -->
+        {% if pedido_form.errors %}
+            <div class="alert alert-danger">
+                <ul>
+                    {% for field in pedido_form %}
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in pedido_form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
             </div>
-        {% endfor %}
-    </div>
-    <button type="button" class="btn btn-secondary" id="agregar-producto" onclick="addForm()">Agregar Producto</button>
-    <div class="form-group">
-        <label>Precio Total</label>
-        <input type="text" id="precio-total" value="0" readonly class="form-control">
-    </div>
-    <a href="{% url 'pedido_list' %}" class="btn btn-secondary">Volver</a>
-    <button type="submit" class="btn btn-primary">Crear Pedido</button>
-    </form>
+        {% endif %}
+        <!-- Sección de Información del Pedido -->
+        <div class="card mb-4">
+            <div class="card-header">
+                Información del Pedido
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    {{ pedido_form.cliente.label_tag }}
+                    {{ pedido_form.cliente|add_class:"form-control" }}
+                </div>
+                <div class="form-group">
+                    {{ pedido_form.estado.label_tag }}
+                    {{ pedido_form.estado|add_class:"form-control" }}
+                </div>
+            </div>
+        </div>
 
-    <script>
-        function addForm() {
-            var formsetDiv = document.getElementById('producto-formset');
-            var totalForms = document.querySelectorAll('#producto-formset .form-group').length;
-    
-            var newForm = formsetDiv.querySelector('.form-group:last-child').cloneNode(true);
-    
-            var formRegex = /-(\d+)-/g;
-            newForm.innerHTML = newForm.innerHTML.replace(formRegex, `-${totalForms}-`);
-    
-            var inputs = newForm.querySelectorAll('input');
-            inputs.forEach(input => input.value = '');
-    
-            formsetDiv.appendChild(newForm);
-    
-            document.getElementById('id_pedidoproducto_set-TOTAL_FORMS').value = totalForms + 1;
-        }
-    
-        function removeForm(button) {
-            var formsetDiv = document.getElementById('producto-formset');
-            var formGroup = button.closest('.form-group');
-            formsetDiv.removeChild(formGroup);
-    
-            var totalForms = document.querySelectorAll('#producto-formset .form-group').length;
-            document.getElementById('id_pedidoproducto_set-TOTAL_FORMS').value = totalForms;
-    
-            var forms = document.querySelectorAll('#producto-formset .form-group');
-            forms.forEach((form, index) => {
-                var formRegex = /-(\d+)-/g;
-                form.innerHTML = form.innerHTML.replace(formRegex, `-${index}-`);
+       <!-- Sección de Productos -->
+        <div class="card mb-4">
+            <div class="card-header">
+                Productos
+            </div>
+            <div class="card-body">
+                <div id="producto-formset">
+                    {{ producto_formset.management_form }}
+                    {% for form in producto_formset.forms %}
+                    <div class="form-group row align-items-center">
+                        <div class="col-md-5">
+                            {{ form.producto.label_tag }}
+                            {{ form.producto|add_class:"form-control" }}
+                        </div>
+                        <div class="col-md-3">
+                            <label>Precio Unitario</label>
+                            <input type="text" class="form-control precio-unitario" value="{{ form.producto.instance.costo }}" readonly>
+                        </div>
+                        <div class="col-md-2">
+                            {{ form.cantidad.label_tag }}
+                            {{ form.cantidad|add_class:"form-control cantidad-input" }}
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-danger" onclick="removeForm(this)">Eliminar</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="button" class="btn btn-secondary" id="agregar-producto" onclick="addForm()">Agregar Producto</button>
+            </div>
+        </div>
+
+
+        <!-- Acciones -->
+        <a href="{% url 'pedido_list' %}" class="btn btn-secondary" style="margin-bottom: 3rem;">Volver</a>
+        <button type="submit" class="btn btn-primary" style="margin-bottom: 3rem;">Crear Pedido</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Actualiza el precio unitario cuando se selecciona un nuevo producto
+        document.querySelectorAll('.producto-select').forEach(select => {
+            select.addEventListener('change', function () {
+                updatePrecioUnitario(this);
             });
-        }
-    </script>
-    
+        });
+    });
+
+    function addForm() {
+        var formsetDiv = document.getElementById('producto-formset');
+        var totalForms = document.querySelectorAll('#producto-formset .form-group').length;
+
+        var newForm = formsetDiv.querySelector('.form-group:last-child').cloneNode(true);
+        var formRegex = /-(\d+)-/g;
+        newForm.innerHTML = newForm.innerHTML.replace(formRegex, `-${totalForms}-`);
+
+        // Limpiar valores en los campos de entrada del nuevo formulario
+        newForm.querySelectorAll('input').forEach(input => input.value = '');
+
+        // Agregar el formulario nuevo al formset
+        formsetDiv.appendChild(newForm);
+
+        // Actualizar el total de formularios en el formset
+        document.getElementById('id_pedidoproducto_set-TOTAL_FORMS').value = totalForms + 1;
+
+        // Asignar el evento de cambio de producto al nuevo selector
+        newForm.querySelector('.producto-select').addEventListener('change', function () {
+            updatePrecioUnitario(this);
+        });
+    }
+
+    function removeForm(button) {
+        var formsetDiv = document.getElementById('producto-formset');
+        var formGroup = button.closest('.form-group');
+        formsetDiv.removeChild(formGroup);
+
+        // Actualizar el total de formularios en el formset
+        var totalForms = document.querySelectorAll('#producto-formset .form-group').length;
+        document.getElementById('id_pedidoproducto_set-TOTAL_FORMS').value = totalForms;
+    }
+
+    function updatePrecioUnitario(selectElement) {
+        console.log('Producto cambiado');
+        // Obtener el precio del producto seleccionado y actualizar el campo de precio
+        var selectedOption = selectElement.options[selectElement.selectedIndex];
+        var precioUnitario = selectedOption.dataset.precio;  // Aquí se espera que la opción tenga un data-precio
+        console.log('Precio unitario:', precioUnitario);
+        var precioInput = selectElement.closest('.form-group').querySelector('.precio-unitario');
+
+        // Actualizar el campo de precio unitario con el valor del producto seleccionado
+        precioInput.value = precioUnitario ? parseFloat(precioUnitario).toFixed(2) : '0.00';
+    }
+</script>
+
 {% endblock %}
+

@@ -10,6 +10,10 @@ class PedidoForm(forms.ModelForm):
     class Meta:
         model = Pedido
         fields = ['cliente', 'estado']
+        widgets = {
+            'cliente': forms.Select(attrs={'class': 'form-control'}),
+            'estado': forms.Select(attrs={'class': 'form-control'}),
+        }
 
 class PedidoProductoForm(forms.ModelForm):
     class Meta:
