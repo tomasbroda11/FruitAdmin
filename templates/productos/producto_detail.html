@@ -16,6 +16,18 @@
                 </div>
             </div>
             <div class="row w-100 mb-2 align-items-center justify-content-center">
+                <label class="col-sm-3 col-form-label p-0 text-end"><strong>Categoría:</strong></label>
+                <div class="col-sm-8 p-1">
+                    <p>{{ producto.categoria.nombre }}</p>
+                </div>
+            </div>
+            <div class="row w-100 mb-2 align-items-center justify-content-center">
+                <label class="col-sm-3 col-form-label p-0 text-end"><strong>Proveedor:</strong></label>
+                <div class="col-sm-8 p-1">
+                    <p>{{ producto.proveedor.nombre }} {% if producto.proveedor.nombre == null%} -{% endif %} </p>
+                </div>
+            </div>
+            <div class="row w-100 mb-2 align-items-center justify-content-center">
                 <label class="col-sm-3 col-form-label p-0 text-end"><strong>Último costo:</strong></label>
                 <div class="col-sm-8 p-1">
                     <p>${{ producto.costo|floatformat:2 }}</p>
@@ -31,12 +43,6 @@
                 <label class="col-sm-3 col-form-label p-0 text-end"><strong>Tipo de medida:</strong></label>
                 <div class="col-sm-8 p-1">
                     <p>{{ producto.get_tipo_medida_display }}</p>
-                </div>
-            </div>
-            <div class="row w-100 mb-2 align-items-center justify-content-center">
-                <label class="col-sm-3 col-form-label p-0 text-end"><strong>Categoría:</strong></label>
-                <div class="col-sm-8 p-1">
-                    <p>{{ producto.categoria.nombre }}</p>
                 </div>
             </div>
         </div>

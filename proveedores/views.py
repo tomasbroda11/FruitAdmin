@@ -20,7 +20,7 @@ def proveedores_create(request):
         form = ProveedorForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('proveedor_list')
+            return redirect('proveedores_list')
     else:
         form = ProveedorForm()
     
