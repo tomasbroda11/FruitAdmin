@@ -6,8 +6,9 @@
 <h2>Lista de productos</h2>
 <a href="{% url 'producto_create' %}" class="btn btn-primary">Cargar Nuevo Producto</a>
 <a href="{% url 'producto_update'  %}" class="btn btn-primary">Actualizar Producto</a>
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" action="{% url 'producto_upload_excel' %}">
     {% csrf_token %}
+    {{ form.as_p }}
     <div class="mb-3">
         <label for="formFile" class="form-label">Seleccione un archivo de productos</label>
         <input class="form-control" type="file" id="formFile" name="file">  
@@ -22,6 +23,7 @@
             <th>Nombre</th>
             <th>Costo</th>
             <th>Categoría</th>
+            <th>Proveedor</th>
             <th>Stock actual</th>
             <th>Tipo de medida</th>
             <th>Acciones</th>
@@ -34,6 +36,7 @@
             <td>{{ producto.nombre }}</td>
             <td>${{ producto.costo }}</td>
             <td>{{ producto.categoria.nombre }}</td>
+            <td>{{ producto.proveedor.nombre }}</td>
             <td>{{ producto.cantidad }}{% if producto.tipo_medida == 'peso' %} kg{% endif %}</td>
             <td>{{ producto.get_tipo_medida_display }}</td>
             <td>

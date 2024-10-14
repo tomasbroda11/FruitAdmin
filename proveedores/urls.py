@@ -7,4 +7,4 @@ urlpatterns = [
     path('<int:pk>/', views.proveedores_detail, name='proveedor_detail'),
     path('<int:pk>/delete/', views.proveedores_delete, name='proveedor_delete'),
     path('<int:pk>/update/', views.proveedores_update, name='proveedor_update'),
-]
+] 
