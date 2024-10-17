@@ -4,6 +4,15 @@
 
 {% block content %}
 <h2>Lista de productos</h2>
+{% if messages %}
+    <div>
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
 <a href="{% url 'producto_create' %}" class="btn btn-primary">Cargar Nuevo Producto</a>
 <a href="{% url 'producto_update'  %}" class="btn btn-primary">Actualizar Producto</a>
 <form method="post" enctype="multipart/form-data" action="{% url 'producto_upload_excel' %}">
@@ -11,7 +20,7 @@
     {{ form.as_p }}
     <div class="mb-3">
         <label for="formFile" class="form-label">Seleccione un archivo de productos</label>
-        <input class="form-control" type="file" id="formFile" name="file">  
+        <input class="form-control" type="file" id="formFile" name="archivo">  
     </div>
     <button type="submit" class="btn btn-primary">Cargar productos</button>
 </form>

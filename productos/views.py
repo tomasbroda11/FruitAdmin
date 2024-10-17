@@ -69,7 +69,6 @@ def productos_update(request):
 
 def productos_upload_excel(request):
     if request.method == 'POST':
-        print("LA CONCHA DE TU MADRE")
         form = CargarExcelForm(request.POST, request.FILES)
         if form.is_valid():
             if 'archivo' in request.FILES:
@@ -79,7 +78,7 @@ def productos_upload_excel(request):
                 
             if 'archivo' not in request.FILES:
                 messages.error(request, 'No se ha seleccionado ningún archivo.')
-                return redirect('producto_upload_excel')
+                return redirect('producto_list')
 
             excel_file = request.FILES['archivo']
 
@@ -93,7 +92,7 @@ def productos_upload_excel(request):
                 required_columns = ['nombre', 'categoria','proveedor','costo', 'cantidad', 'porcentaje_ganancia', 'tipo_medida']
                 if not all(col in df.columns for col in required_columns):
                     messages.error(request, 'El archivo Excel no contiene las columnas requeridas.')
-                    return redirect('producto_upload_excel')
+                    return redirect('producto_list')
 
                 # Procesar cada fila del DataFrame y guardar los productos
                 for _, row in df.iterrows():
@@ -101,17 +100,17 @@ def productos_upload_excel(request):
                         categoria = Categoria.objects.get(nombre=row['categoria'])  # Busca la categoría
                     except Categoria.DoesNotExist:
                         messages.error(request, f'Categoría no encontrada: {row["categoria"]}')
-                        return redirect('producto_upload_excel')
+                        return redirect('producto_list')
                     try:
                         proveedor = Proveedor.objects.get(nombre=row['proveedor'])  # Busca el proveedor
                     except Proveedor.DoesNotExist:
                         messages.error(request, f'Proveedor no encontrado: {row["proveedor"]}')
-                        return redirect('producto_upload_excel')
+                        return redirect('producto_list')
 
                     tipo_medida = row['tipo_medida']
                     if tipo_medida not in dict(Producto.TIPO_MEDIDA_CHOICES):
                         messages.error(request, f'Tipo de medida inválido: {tipo_medida}')
-                        return redirect('producto_upload_excel')
+                        return redirect('producto_list')
 
                     producto = Producto(
                         nombre=row['nombre'],
@@ -129,11 +128,11 @@ def productos_upload_excel(request):
 
             except Exception as e:
                 messages.error(request, f'Error al procesar el archivo: {str(e)}')
-                return redirect('producto_upload_excel')
+                return redirect('producto_list')
         else:
             messages.error(request, 'No se ha seleccionado ningún archivo.')
             print("El archivo no esta cargando aca")
     else:
         form = CargarExcelForm()
 
-    return render(request, 'productos/producto_upload_excel.html', {'form': form})
+    return render(request, 'productos/producto_form.html', {'form': form})
