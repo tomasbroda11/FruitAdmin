@@ -7,8 +7,13 @@ from django.contrib import messages
 import pandas as pd
 
 def productos_list(request):
-    productos = Producto.objects.all()
-    return render(request,'productos/producto_list.html',{'productos': productos})
+    categoria_id = request.GET.get('categoria')  # Obtén la categoría de los parámetros de consulta
+    if categoria_id:
+        productos = Producto.objects.filter(categoria_id=categoria_id)  # Filtra por categoría
+    else:
+        productos = Producto.objects.all()  # Muestra todos los productos si no hay categoría seleccionada
+    categorias = Categoria.objects.all()  # Para el menú desplegable
+    return render(request,'productos/producto_list.html',{'productos': productos, 'categorias':categorias})
 
 def productos_create(request):
     if request.method == 'POST':
