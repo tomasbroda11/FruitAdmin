@@ -86,7 +86,6 @@ def productos_upload_excel(request):
                 print(f"Archivo cargado: {request.FILES['archivo'].name}")
                 df = pd.read_excel(excel_file, engine='openpyxl')
 
-                # Normalizar las columnas del archivo Excel
                 df.columns = df.columns.str.strip().str.lower()
 
                 required_columns = ['nombre', 'categoria','proveedor','costo', 'cantidad', 'porcentaje_ganancia', 'tipo_medida']
@@ -94,15 +93,15 @@ def productos_upload_excel(request):
                     messages.error(request, 'El archivo Excel no contiene las columnas requeridas.')
                     return redirect('producto_list')
 
-                # Procesar cada fila del DataFrame y guardar los productos
+               
                 for _, row in df.iterrows():
                     try:
-                        categoria = Categoria.objects.get(nombre=row['categoria'])  # Busca la categoría
+                        categoria = Categoria.objects.get(nombre=row['categoria'])  
                     except Categoria.DoesNotExist:
                         messages.error(request, f'Categoría no encontrada: {row["categoria"]}')
                         return redirect('producto_list')
                     try:
-                        proveedor = Proveedor.objects.get(nombre=row['proveedor'])  # Busca el proveedor
+                        proveedor = Proveedor.objects.get(nombre=row['proveedor'])  
                     except Proveedor.DoesNotExist:
                         messages.error(request, f'Proveedor no encontrado: {row["proveedor"]}')
                         return redirect('producto_list')
