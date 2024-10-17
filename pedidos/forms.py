@@ -15,9 +15,27 @@ class PedidoForm(forms.ModelForm):
             'estado': forms.Select(attrs={'class': 'form-control'}),
         }
 
+class ProductoSelectWidget(forms.Select):
+    def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
+        option = super().create_option(name, value, label, selected, index, subindex, attrs)
+        if value and not isinstance(value, (int, str)):
+            value = value.value
+        if value:
+            try:
+                producto = Producto.objects.get(pk=value)
+                option['attrs']['data-precio'] = str(producto.costo)
+            except Producto.DoesNotExist:
+                pass
+        return option
+
 class PedidoProductoForm(forms.ModelForm):
     class Meta:
         model = PedidoProducto
         fields = ['producto', 'cantidad']
+        widgets = {
+            'producto': ProductoSelectWidget(attrs={'class': 'form-control producto-select'}),
+            'cantidad': forms.NumberInput(attrs={'class': 'form-control cantidad-input'}),
+        }
 
 PedidoProductoFormSet = inlineformset_factory(Pedido, PedidoProducto, form=PedidoProductoForm, extra=1, can_delete=True)
+

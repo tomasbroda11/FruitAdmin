@@ -32,7 +32,7 @@ def pedido_delete(request, pk):
 def pedido_create(request):
     if request.method == 'POST':
         pedido_form = PedidoForm(request.POST)
-        producto_formset = PedidoProductoFormSet(request.POST)
+        producto_formset = PedidoProductoFormSet(request.POST, prefix='pedidoproducto_set')
         
         if pedido_form.is_valid() and producto_formset.is_valid():
             pedido = pedido_form.save(commit=False)
@@ -70,7 +70,7 @@ def pedido_create(request):
             print("Errores en el formset de productos:", producto_formset.errors)
     else:
         pedido_form = PedidoForm()
-        producto_formset = PedidoProductoFormSet()
+        producto_formset = PedidoProductoFormSet(prefix='pedidoproducto_set')
 
     
     return render(request, 'pedidos/pedido_form.html', {
