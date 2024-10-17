@@ -51,11 +51,11 @@
                     <div class="form-group row align-items-center">
                         <div class="col-md-5">
                             {{ form.producto.label_tag }}
-                            {{ form.producto|add_class:"form-control" }}
+                            {{ form.producto|add_class:"form-control producto-select" }}
                         </div>
                         <div class="col-md-3">
                             <label>Precio Unitario</label>
-                            <input type="text" class="form-control precio-unitario" value="{{ form.producto.instance.costo }}" readonly>
+                            <input type="text" class="form-control precio-unitario"                 readonly>
                         </div>
                         <div class="col-md-2">
                             {{ form.cantidad.label_tag }}
@@ -82,6 +82,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         // Actualiza el precio unitario cuando se selecciona un nuevo producto
         document.querySelectorAll('.producto-select').forEach(select => {
+            updatePrecioUnitario(select);
             select.addEventListener('change', function () {
                 updatePrecioUnitario(this);
             });
@@ -125,12 +126,15 @@
         console.log('Producto cambiado');
         // Obtener el precio del producto seleccionado y actualizar el campo de precio
         var selectedOption = selectElement.options[selectElement.selectedIndex];
-        var precioUnitario = selectedOption.dataset.precio;  // Aquí se espera que la opción tenga un data-precio
+        var precioUnitario = selectedOption.getAttribute('data-precio');  // Aquí se espera que la opción tenga un data-precio
         console.log('Precio unitario:', precioUnitario);
         var precioInput = selectElement.closest('.form-group').querySelector('.precio-unitario');
 
-        // Actualizar el campo de precio unitario con el valor del producto seleccionado
-        precioInput.value = precioUnitario ? parseFloat(precioUnitario).toFixed(2) : '0.00';
+        if (precioInput) {
+            precioInput.value = precioUnitario ? parseFloat(precioUnitario).toFixed(2) : '0.00';
+        } else {
+            console.error('No se encontró el campo de precio unitario');
+        }
     }
 </script>
 
