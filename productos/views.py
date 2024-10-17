@@ -5,14 +5,15 @@ from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.contrib import messages
 import pandas as pd
+from decimal import Decimal
 
 def productos_list(request):
     categoria_id = request.GET.get('categoria')  # Obtén la categoría de los parámetros de consulta
     if categoria_id:
-        productos = Producto.objects.filter(categoria_id=categoria_id)  # Filtra por categoría
+        productos = Producto.objects.filter(categoria_id=categoria_id)  
     else:
-        productos = Producto.objects.all()  # Muestra todos los productos si no hay categoría seleccionada
-    categorias = Categoria.objects.all()  # Para el menú desplegable
+        productos = Producto.objects.all()  
+    categorias = Categoria.objects.all()  
     return render(request,'productos/producto_list.html',{'productos': productos, 'categorias':categorias})
 
 def productos_create(request):
@@ -24,10 +25,13 @@ def productos_create(request):
             producto.tipo_medida = tipo_medida
             producto.save()
             return redirect('producto_list')
+        else:
+            print(form.errors)
     else:
         form = ProductoForm()
     
     return render(request, 'productos/producto_form.html', {'form': form})
+
 
 def productos_detail(request,pk):
     producto = get_object_or_404(Producto,pk=pk)
@@ -140,3 +144,30 @@ def productos_upload_excel(request):
         form = CargarExcelForm()
 
     return render(request, 'productos/producto_form.html', {'form': form})
+
+
+def update_masivo(request):
+    if request.method == 'POST':
+        productos = Producto.objects.all()
+        categoria_id = request.POST.get('categoria')  
+        porcentaje_aumento = request.POST.get('porcentaje_aumento')
+        porcentaje_aumento = Decimal(porcentaje_aumento)
+
+        if categoria_id:
+            productos = productos.filter(categoria_id=categoria_id)  
+        if porcentaje_aumento:
+            try:
+                for producto in productos:
+                    producto.costo += (producto.costo * porcentaje_aumento / 100)
+                    producto.save()
+                messages.success(request, f'Precios actualizados exitosamente con un aumento del {porcentaje_aumento}% para los productos seleccionados.')
+            except ValueError:
+                messages.error(request, 'Por favor, ingrese un valor numérico válido para el porcentaje de aumento.')
+        else:
+            messages.error(request, 'Por favor, ingrese un porcentaje de aumento.')
+        
+        return redirect('producto_list')
+    
+    else:
+        categorias = Categoria.objects.all()  # Para el menú desplegable de categorías
+        return render(request, 'productos/producto_update_masivo.html', {'categorias': categorias})
