@@ -15,7 +15,7 @@
 
     <!-- Tabla de proveedores -->
     <div class="table-responsive">
-        <table class="table table-striped table-hover align-middle">
+        <table class="table table-striped align-middle">
             <thead class="table-dark text-center">
                 <tr>
                     <th>Id Proveedor</th>
@@ -29,7 +29,7 @@
             </thead>
             <tbody>
                 {% for proveedor in proveedores %}
-                <tr>
+                <tr class="text-center">
                     <td class="text-center">{{ proveedor.id }}</td>
                     <td>{{ proveedor.nombre }}</td>
                     <td>{{ proveedor.cuit }}</td>
