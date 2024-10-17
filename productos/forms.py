@@ -3,6 +3,8 @@ from .models import Producto
 from django.forms import inlineformset_factory
 from categorias.models import Categoria
 from proveedores.models import Proveedor
+from django.core.exceptions import ValidationError
+
 
 class ProductoForm(forms.ModelForm):
     categoria = forms.ModelChoiceField(
@@ -12,7 +14,7 @@ class ProductoForm(forms.ModelForm):
     
     class Meta:
         model = Producto
-        fields = ('nombre', 'categoria', 'costo', 'cantidad', 'porcentaje_ganancia', 'tipo_medida', 'proveedor')
+        fields = ('nombre', 'categoria', 'costo','precio' ,'cantidad', 'porcentaje_ganancia', 'tipo_medida', 'proveedor')
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
             'costo': forms.NumberInput(attrs={'class': 'form-control', 'step': 'any'}),
@@ -20,7 +22,19 @@ class ProductoForm(forms.ModelForm):
             'porcentaje_ganancia': forms.NumberInput(attrs={'class': 'form-control', 'step': 'any'}),
             'tipo_medida': forms.RadioSelect(choices=Producto.TIPO_MEDIDA_CHOICES),
             'proveedor': forms.Select(attrs={'class': 'form-control'}),
+            'precio':forms.NumberInput(attrs={'class': 'form-control', 'step': 'any'})
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        precio = cleaned_data.get('precio')
+        porcentaje_ganancia = cleaned_data.get('porcentaje_ganancia')
+
+        # Al menos uno de precio o porcentaje_ganancia debe ser proporcionado
+        if not precio and not porcentaje_ganancia:
+            raise ValidationError('Debe ingresar un precio o un porcentaje de ganancia.')
+        
+        return cleaned_data
 
 
 class ProductoUpdateForm(forms.ModelForm):

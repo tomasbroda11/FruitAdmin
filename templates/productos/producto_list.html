@@ -15,6 +15,9 @@
             <a href="{% url 'producto_update' %}" class="btn btn-warning">
                 <i class="bi bi-pencil-square"></i> Actualizar Producto
             </a>
+            <a href="{% url 'update_masivo' %}" class="btn text-white" style="background-color: blueviolet;">
+                <i class="bi bi-pencil-square"></i> Actualizar Precios
+            </a>
         </div>
         <!-- Formulario de carga de productos -->
         <form method="post" enctype="multipart/form-data" action="{% url 'producto_upload_excel' %}" class="d-flex">
