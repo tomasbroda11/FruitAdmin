@@ -99,40 +99,59 @@ def productos_upload_excel(request):
                 df = pd.read_excel(excel_file, engine='openpyxl')
 
                 df.columns = df.columns.str.strip().str.lower()
-
-                required_columns = ['nombre', 'categoria','proveedor','costo', 'cantidad', 'porcentaje_ganancia', 'tipo_medida']
+                required_columns = ['nombre', 'categoria','proveedor','costo', 'precio','cantidad', 'porcentaje_ganancia', 'tipo_medida']
                 if not all(col in df.columns for col in required_columns):
                     messages.error(request, 'El archivo Excel no contiene las columnas requeridas.')
                     return redirect('producto_list')
 
                
-                for _, row in df.iterrows():
+                for index, row in df.iterrows():
                     try:
                         categoria = Categoria.objects.get(nombre=row['categoria'])  
                     except Categoria.DoesNotExist:
-                        messages.error(request, f'Categoría no encontrada: {row["categoria"]}')
-                        return redirect('producto_list')
+                        messages.error(request, f'Fila {index + 2}: Categoría no encontrada: "{row["categoria"]}".')
+                        continue  
+
                     try:
                         proveedor = Proveedor.objects.get(nombre=row['proveedor'])  
                     except Proveedor.DoesNotExist:
-                        messages.error(request, f'Proveedor no encontrado: {row["proveedor"]}')
-                        return redirect('producto_list')
+                        messages.error(request, f'Fila {index + 2}: Proveedor no encontrado: "{row["proveedor"]}".')
+                        continue  
 
                     tipo_medida = row['tipo_medida']
                     if tipo_medida not in dict(Producto.TIPO_MEDIDA_CHOICES):
-                        messages.error(request, f'Tipo de medida inválido: {tipo_medida}')
-                        return redirect('producto_list')
+                        messages.error(request, f'Fila {index + 2}: Tipo de medida inválido: "{tipo_medida}".')
+                        continue  
 
-                    producto = Producto(
-                        nombre=row['nombre'],
-                        categoria=categoria,
-                        proveedor=proveedor,
-                        costo=row['costo'],
-                        cantidad=row['cantidad'],
-                        porcentaje_ganancia=row['porcentaje_ganancia'],
-                        tipo_medida=tipo_medida
-                    )
-                    producto.save()
+                    costo = row['costo']
+                    porc_ganancia = row['porcentaje_ganancia']
+                    precio = row['precio']
+
+                    if pd.isna(porc_ganancia) and pd.isna(precio):
+                        messages.error(request, f'Fila {index + 2}: El producto "{row["nombre"]}" tiene ambos, porcentaje de ganancia y precio, nulos.')
+                        continue  
+                    elif pd.notna(porc_ganancia) and pd.isna(precio):
+                        precio = costo * (1 + (porc_ganancia / 100))
+                    elif pd.isna(porc_ganancia) and pd.notna(precio):
+                        porc_ganancia = 0
+                    elif pd.notna(porc_ganancia) and pd.notna(precio):
+                        porc_ganancia = 0  
+
+                    try:
+                        producto = Producto(
+                            nombre=row['nombre'],
+                            categoria=categoria,
+                            proveedor=proveedor,
+                            costo=costo,
+                            cantidad=row['cantidad'],
+                            porcentaje_ganancia=porc_ganancia,
+                            tipo_medida=tipo_medida,
+                            precio=precio
+                        )
+                        producto.save()
+                    except Exception as e:
+                        messages.error(request, f'Fila {index + 2}: Error al guardar el producto "{row["nombre"]}": {str(e)}')
+
 
                 messages.success(request, 'Productos cargados exitosamente.')
                 return redirect('producto_list')
