@@ -25,16 +25,28 @@ class ProductoForm(forms.ModelForm):
             'precio':forms.NumberInput(attrs={'class': 'form-control', 'step': 'any'})
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['porcentaje_ganancia'].required = False
+
     def clean(self):
         cleaned_data = super().clean()
+        
+        forma_carga = cleaned_data.get('formaCarga')
         precio = cleaned_data.get('precio')
         porcentaje_ganancia = cleaned_data.get('porcentaje_ganancia')
 
-        # Al menos uno de precio o porcentaje_ganancia debe ser proporcionado
-        if not precio and not porcentaje_ganancia:
-            raise ValidationError('Debe ingresar un precio o un porcentaje de ganancia.')
-        
-        return cleaned_data
+        print(f"forma_carga: {forma_carga}, precio: {precio}, porcentaje_ganancia: {porcentaje_ganancia}")
+
+        # Validar si seleccionaron la opción 'precio' y no ingresaron precio
+        if forma_carga == 'precio' and not precio:
+            self.add_error('precio', 'Debe ingresar un precio si seleccionó la opción Costo + Precio.')
+
+        # Validar si seleccionaron la opción 'porcentaje_ganancia' y no ingresaron porcentaje
+        elif forma_carga == 'porcentaje_ganancia' and not porcentaje_ganancia:
+            self.add_error('porcentaje_ganancia', 'Debe ingresar un porcentaje de ganancia si seleccionó la opción Costo + % Ganancia.')
+
+        return cleaned_data    
 
 
 class ProductoUpdateForm(forms.ModelForm):
@@ -43,9 +55,9 @@ class ProductoUpdateForm(forms.ModelForm):
     precio_actual = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     class Meta:
         model = Producto
-        fields = ('producto', 'costo', 'cantidad')
+        fields = ('producto', 'precio', 'cantidad')
         widgets = {
-            'costo': forms.NumberInput(attrs={'class': 'form-control', 'step': 'any'}),
+            'precio': forms.NumberInput(attrs={'class': 'form-control', 'step': 'any'}),
             'cantidad': forms.NumberInput(attrs={'class': 'form-control', 'step': 'any'}),
         }
 

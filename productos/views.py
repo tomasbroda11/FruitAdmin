@@ -45,7 +45,7 @@ def productos_api_detail(request, pk):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         data = {
             'stock_actual': producto.cantidad,  
-            'precio_actual': producto.costo, 
+            'precio_actual': producto.precio, 
         }
         return JsonResponse(data)  # Devuelve los datos en formato JSON
 
@@ -65,12 +65,15 @@ def productos_delete(request, pk):
 def productos_update(request):
     if request.method == 'POST':
         producto_id = request.POST.get('producto')
+        print(f"Producto ID: {producto_id}")
         producto = get_object_or_404(Producto, pk=producto_id)
         form = ProductoUpdateForm(request.POST, instance=producto)
         if form.is_valid():
             form.save()
             messages.success(request, 'Producto actualizado correctamente')
             return redirect('producto_list')  # Redirige a la lista de productos después de la actualización
+        else:
+            print(form.errors)
     else:
         form = ProductoUpdateForm()
     

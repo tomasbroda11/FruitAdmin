@@ -2,6 +2,7 @@ from django.db import models
 from categorias.models import Categoria
 from proveedores.models import Proveedor
 from decimal import Decimal
+from django.core.exceptions import ValidationError
 
 class Producto(models.Model):
     UNIDAD = 'unidad'
