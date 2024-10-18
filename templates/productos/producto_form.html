@@ -92,27 +92,48 @@
 </div>
 
 <script>
-    // Función para alternar entre precio y porcentaje_ganancia
     document.addEventListener('DOMContentLoaded', function() {
         const precioRow = document.getElementById('precioRow');
         const porcentajeRow = document.getElementById('porcentajeRow');
         const radioCargaPrecio = document.getElementById('cargaPrecio');
         const radioCargaPorcentaje = document.getElementById('cargaPorcentaje');
+        const porcentajeInput = document.getElementById('id_porcentaje_ganancia');
+        const precioInput = document.getElementById('id_form_precio'); // Cambiar por el ID correcto
 
-        // Cambiar la visibilidad al seleccionar el método
-        radioCargaPrecio.addEventListener('change', function() {
-            if (radioCargaPrecio.checked) {
+        // Función para alternar entre precio y porcentaje de ganancia
+        function toggleFields() {
+            if (radioCargaPrecio && radioCargaPrecio.checked) {
                 precioRow.style.display = 'flex';
                 porcentajeRow.style.display = 'none';
-            }
-        });
-
-        radioCargaPorcentaje.addEventListener('change', function() {
-            if (radioCargaPorcentaje.checked) {
+                if (precioInput) {
+                    precioInput.required = true;
+                }
+                if (porcentajeInput) {
+                    porcentajeInput.required = false; // Eliminamos el required de porcentaje
+                }
+            } else if (radioCargaPorcentaje && radioCargaPorcentaje.checked) {
                 porcentajeRow.style.display = 'flex';
                 precioRow.style.display = 'none';
+                if (porcentajeInput) {
+                    porcentajeInput.required = true; // Hacemos requerido el porcentaje de ganancia
+                }
+                if (precioInput) {
+                    precioInput.required = false; // Eliminamos el required de precio
+                }
             }
-        });
+        }
+
+        // Ejecutamos la función al cargar la página
+        toggleFields();
+
+        // Agregamos eventos para cambiar la visibilidad de los campos
+        if (radioCargaPrecio) {
+            radioCargaPrecio.addEventListener('change', toggleFields);
+        }
+        if (radioCargaPorcentaje) {
+            radioCargaPorcentaje.addEventListener('change', toggleFields);
+        }
     });
 </script>
+
 {% endblock %}

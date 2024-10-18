@@ -28,9 +28,9 @@
                 </div>
             </div>
             <div class="row w-100 mb-2 align-items-center justify-content-center">
-                <label class="col-sm-3 col-form-label p-0 text-end"><strong>Último costo:</strong></label>
+                <label class="col-sm-3 col-form-label p-0 text-end"><strong>Tipo de medida:</strong></label>
                 <div class="col-sm-8 p-1">
-                    <p>${{ producto.costo|floatformat:2 }}</p>
+                    <p>{{ producto.get_tipo_medida_display }}</p>
                 </div>
             </div>
             <div class="row w-100 mb-2 align-items-center justify-content-center">
@@ -40,9 +40,15 @@
                 </div>
             </div>
             <div class="row w-100 mb-2 align-items-center justify-content-center">
-                <label class="col-sm-3 col-form-label p-0 text-end"><strong>Tipo de medida:</strong></label>
+                <label class="col-sm-3 col-form-label p-0 text-end"><strong>Costo:</strong></label>
                 <div class="col-sm-8 p-1">
-                    <p>{{ producto.get_tipo_medida_display }}</p>
+                    <p>${{ producto.costo|floatformat:2 }}</p>
+                </div>
+            </div>
+            <div class="row w-100 mb-2 align-items-center justify-content-center">
+                <label class="col-sm-3 col-form-label p-0 text-end"><strong>Precio:</strong></label>
+                <div class="col-sm-8 p-1">
+                    <p>${{ producto.precio|floatformat:2 }}</p>
                 </div>
             </div>
         </div>
