@@ -8,28 +8,39 @@
         <div class="card-header text-center bg-info text-white" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
             <h4 class="card-title mb-0">Nuevo Producto</h4>
         </div>
-        <form method="post">
+        <form method="post" action="{% url 'producto_create' %}" id="productoForm">
             {% csrf_token %}
             <div class="card-body d-flex flex-column align-items-center px-5 py-4">
+                <!-- Nombre del producto -->
                 <div class="row w-100 mb-2 align-items-center justify-content-center">
                     <label for="nombre" class="col-sm-3 col-form-label p-0 text-end">{{ form.nombre.label_tag }}</label>
                     <div class="col-sm-8 p-1">
                         {{ form.nombre }}
                     </div>
                 </div>
+                <!-- Categoría -->
                 <div class="row w-100 mb-2 align-items-center justify-content-center">
                     <label for="categoria" class="col-sm-3 col-form-label p-0 text-end">{{ form.categoria.label_tag }}</label>
                     <div class="col-sm-8 p-1">
                         {{ form.categoria }}
                     </div>
                 </div>
+                <!-- Proveedor -->
+                <div class="row w-100 mb-2 align-items-center justify-content-center">
+                    <label for="proveedor" class="col-sm-3 col-form-label p-0 text-end">{{ form.proveedor.label_tag }}</label>
+                    <div class="col-sm-8 p-1">
+                        {{ form.proveedor }}
+                    </div>
+                </div>
+                <!-- Costo -->
                 <div class="row w-100 mb-2 align-items-center justify-content-center">
                     <label for="costo" class="col-sm-3 col-form-label p-0 text-end">{{ form.costo.label_tag }}</label>
                     <div class="col-sm-8 p-1">
                         {{ form.costo }}
                     </div>
                 </div>
-                <div class="row w-100 mb-2 align-items-center justify-content-center">
+                <!-- Tipo de Medida -->
+                <div class="row w-100 mb-3 align-items-center justify-content-center">
                     <label for="tipo_medida" class="col-sm-3 col-form-label p-0 text-end">{{ form.tipo_medida.label_tag }}</label>
                     <div class="col-sm-8 p-1">
                         {{ form.tipo_medida }}
@@ -40,14 +51,38 @@
                     <div class="col-sm-8 p-1">
                         {{ form.cantidad }}
                     </div>
-                </div>
-                <div class="row w-100 mb-2 align-items-center justify-content-center">
-                    <label for="porcentaje_ganancia" class="col-sm-3 col-form-label p-0 text-end">{{ form.porcentaje_ganancia.label_tag }}</label>
+                </div>                                
+                <!-- Selector para el método de carga -->
+                <div class="row w-100 mb-3 align-items-center justify-content-center">
+                    <label class="col-sm-3 col-form-label p-0 text-end">Forma de Carga</label>
                     <div class="col-sm-8 p-1">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="formaCarga" id="cargaPrecio" value="precio" checked>
+                            <label class="form-check-label" for="cargaPrecio">Costo + Precio</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="formaCarga" id="cargaPorcentaje" value="porcentaje_ganancia">
+                            <label class="form-check-label" for="cargaPorcentaje">Costo + % Ganancia</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Campo para Precio (visible por defecto) -->
+                <div class="row w-100 mb-2 align-items-center justify-content-center" id="precioRow">
+                    <label for="precio" class="col-sm-3 col-form-label p-0 text-end">Precio</label>
+                    <div class="col-sm-8 p-1">
+                        {{ form.precio }}
+                    </div>
+                </div>
+                <!-- Campo para Porcentaje de Ganancia (oculto por defecto) -->
+                <div class="row w-100 mb-2 align-items-center justify-content-center" id="porcentajeRow" style="display: none;">
+                    <label for="porcentaje_ganancia" class="col-sm-3 col-form-label p-0 text-end">{{ form.porcentaje_ganancia.label_tag }}</label>
+                    <div class="col-sm-8 p-1 d-flex align-items-center">
                         {{ form.porcentaje_ganancia }}
+                        <span class="input-group-text ms-2">%</span>
                     </div>
                 </div>
             </div>
+            <!-- Footer con los botones -->
             <div class="card-footer d-flex justify-content-between px-5 py-3">
                 <a href="{% url 'producto_list' %}" class="btn btn-secondary btn-lg">Volver</a>
                 <button type="submit" class="btn btn-primary btn-lg">Guardar Producto</button>
@@ -55,4 +90,50 @@
         </form>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const precioRow = document.getElementById('precioRow');
+        const porcentajeRow = document.getElementById('porcentajeRow');
+        const radioCargaPrecio = document.getElementById('cargaPrecio');
+        const radioCargaPorcentaje = document.getElementById('cargaPorcentaje');
+        const porcentajeInput = document.getElementById('id_porcentaje_ganancia');
+        const precioInput = document.getElementById('id_form_precio'); // Cambiar por el ID correcto
+
+        // Función para alternar entre precio y porcentaje de ganancia
+        function toggleFields() {
+            if (radioCargaPrecio && radioCargaPrecio.checked) {
+                precioRow.style.display = 'flex';
+                porcentajeRow.style.display = 'none';
+                if (precioInput) {
+                    precioInput.required = true;
+                }
+                if (porcentajeInput) {
+                    porcentajeInput.required = false; // Eliminamos el required de porcentaje
+                }
+            } else if (radioCargaPorcentaje && radioCargaPorcentaje.checked) {
+                porcentajeRow.style.display = 'flex';
+                precioRow.style.display = 'none';
+                if (porcentajeInput) {
+                    porcentajeInput.required = true; // Hacemos requerido el porcentaje de ganancia
+                }
+                if (precioInput) {
+                    precioInput.required = false; // Eliminamos el required de precio
+                }
+            }
+        }
+
+        // Ejecutamos la función al cargar la página
+        toggleFields();
+
+        // Agregamos eventos para cambiar la visibilidad de los campos
+        if (radioCargaPrecio) {
+            radioCargaPrecio.addEventListener('change', toggleFields);
+        }
+        if (radioCargaPorcentaje) {
+            radioCargaPorcentaje.addEventListener('change', toggleFields);
+        }
+    });
+</script>
+
 {% endblock %}

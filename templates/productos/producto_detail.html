@@ -16,15 +16,15 @@
                 </div>
             </div>
             <div class="row w-100 mb-2 align-items-center justify-content-center">
-                <label class="col-sm-3 col-form-label p-0 text-end"><strong>Último costo:</strong></label>
+                <label class="col-sm-3 col-form-label p-0 text-end"><strong>Categoría:</strong></label>
                 <div class="col-sm-8 p-1">
-                    <p>${{ producto.costo|floatformat:2 }}</p>
+                    <p>{{ producto.categoria.nombre }}</p>
                 </div>
             </div>
             <div class="row w-100 mb-2 align-items-center justify-content-center">
-                <label class="col-sm-3 col-form-label p-0 text-end"><strong>Stock actual:</strong></label>
+                <label class="col-sm-3 col-form-label p-0 text-end"><strong>Proveedor:</strong></label>
                 <div class="col-sm-8 p-1">
-                    <p>{{ producto.cantidad }} {% if producto.tipo_medida == 'peso' %}kg{% endif %}</p>
+                    <p>{{ producto.proveedor.nombre }} {% if producto.proveedor.nombre == null%} -{% endif %} </p>
                 </div>
             </div>
             <div class="row w-100 mb-2 align-items-center justify-content-center">
@@ -34,9 +34,21 @@
                 </div>
             </div>
             <div class="row w-100 mb-2 align-items-center justify-content-center">
-                <label class="col-sm-3 col-form-label p-0 text-end"><strong>Categoría:</strong></label>
+                <label class="col-sm-3 col-form-label p-0 text-end"><strong>Stock actual:</strong></label>
                 <div class="col-sm-8 p-1">
-                    <p>{{ producto.categoria.nombre }}</p>
+                    <p>{{ producto.cantidad }} {% if producto.tipo_medida == 'peso' %}kg{% endif %}</p>
+                </div>
+            </div>
+            <div class="row w-100 mb-2 align-items-center justify-content-center">
+                <label class="col-sm-3 col-form-label p-0 text-end"><strong>Costo:</strong></label>
+                <div class="col-sm-8 p-1">
+                    <p>${{ producto.costo|floatformat:2 }}</p>
+                </div>
+            </div>
+            <div class="row w-100 mb-2 align-items-center justify-content-center">
+                <label class="col-sm-3 col-form-label p-0 text-end"><strong>Precio:</strong></label>
+                <div class="col-sm-8 p-1">
+                    <p>${{ producto.precio|floatformat:2 }}</p>
                 </div>
             </div>
         </div>

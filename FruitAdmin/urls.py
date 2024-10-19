@@ -13,4 +13,6 @@ urlpatterns = [
     path('productos/', include('productos.urls')),
     path('clientes/', include('clientes.urls')),
     path('reportes/', include('reportes.urls')),
+    path('proveedores/',include('proveedores.urls')),
+    path('categorias/',include('categorias.urls')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

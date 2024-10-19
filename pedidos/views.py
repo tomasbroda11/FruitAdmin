@@ -4,10 +4,26 @@ from .forms import PedidoForm, PedidoProductoFormSet
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_http_methods, require_POST
 
-
 def pedido_list(request):
-    pedidos = Pedido.objects.all()
-    return render(request, 'pedidos/pedido_list.html', {'pedidos': pedidos})
+    # Obtener todos los pedidos inicialmente
+    pedidos = Pedido.objects.all()  
+    
+    # Obtener el estado seleccionado del formulario
+    estado_seleccionado = request.GET.get('estado')
+    
+    # Filtrar los pedidos por estado si se ha seleccionado uno
+    if estado_seleccionado:
+        pedidos = pedidos.filter(estado=estado_seleccionado)
+
+    # Obtener los estados únicos de las opciones definidas en el modelo
+    estados_unicos = Pedido.ESTADO_OPCIONES
+
+    return render(request, 'pedidos/pedido_list.html', {
+        'pedidos': pedidos,
+        'estados_unicos': estados_unicos,  # Pasar las opciones de estado al contexto
+        'estado_seleccionado': estado_seleccionado,  # Para mantener la selección en el formulario
+    })
+
 
 def pedido_detail(request, pk):
     pedido = get_object_or_404(Pedido, pk=pk)
@@ -32,7 +48,7 @@ def pedido_delete(request, pk):
 def pedido_create(request):
     if request.method == 'POST':
         pedido_form = PedidoForm(request.POST)
-        producto_formset = PedidoProductoFormSet(request.POST)
+        producto_formset = PedidoProductoFormSet(request.POST, prefix='pedidoproducto_set')
         
         if pedido_form.is_valid() and producto_formset.is_valid():
             pedido = pedido_form.save(commit=False)
@@ -42,6 +58,13 @@ def pedido_create(request):
                 pedido.cliente = cliente
             else:
                 print("No se seleccionó cliente correctamente")
+            
+            # Asignar estado (por defecto "en espera" si no se selecciona ninguno)
+            estado = pedido_form.cleaned_data.get('estado')
+            if not estado:
+                pedido.estado = 'en_espera'
+            else:
+                pedido.estado = estado
 
             pedido.precio_total = 0  
             pedido.save()
@@ -57,9 +80,14 @@ def pedido_create(request):
             pedido.save()
 
             return redirect('pedido_list')
+        else:
+            # Imprimir los errores en la consola
+            print("Errores en el formulario de pedido:", pedido_form.errors)
+            print("Errores en el formset de productos:", producto_formset.errors)
     else:
         pedido_form = PedidoForm()
-        producto_formset = PedidoProductoFormSet()
+        producto_formset = PedidoProductoFormSet(prefix='pedidoproducto_set')
+
     
     return render(request, 'pedidos/pedido_form.html', {
         'pedido_form': pedido_form,
@@ -71,8 +99,6 @@ def pedido_create(request):
 def nuevo_pedido(request):
     productos = Producto.objects.all()
     return render(request, 'nuevo_pedido.html', {'productos': productos})
-
-
 
 def get_productos(request):
     productos = Producto.objects.all()
