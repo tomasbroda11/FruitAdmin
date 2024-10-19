@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de categorias{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Gestión de categorias</h2>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="{% url 'categoria_create' %}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Crear Nueva Categoria
+        </a>
+    </div>
+    <!-- Tabla de categorias -->
+    <div class="table-responsive">
+        <table class="table table-striped  align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Id Categoria</th>
+                    <th>Nombre</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for categoria in categorias %}
+                <tr>
+                    <td class="text-center">{{ categoria.id }}</td>
+                    <td>{{ categoria.nombre }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'categoria_detail' categoria.pk %}" class="btn btn-outline-info btn-sm me-2">
+                            <i class="bi bi-eye"></i> Ver
+                        </a>
+                        <button class="btn btn-outline-danger btn-sm" data-categoria-pk="{{ categoria.pk }}" onclick="deleteCategoria(this)">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No hay categorias.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    function deleteCategoria(element) {
+        const categoria = element.getAttribute('data-categoria-pk');
+        if (confirm(`¿Estás seguro de que deseas eliminar el categoria ${categoria}?`)) {
+            fetch(`/categorias/${categoria}/delete/`, {  
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('No se pudo eliminar el categoria.');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('Ocurrió un error al intentar eliminar el categoria.');
+            });
+        }
+    }
+</script>
+{% endblock %}
