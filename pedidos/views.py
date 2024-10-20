@@ -112,10 +112,15 @@ def get_productos(request):
 
 def eliminar_pedidos_seleccionados(request):
     if request.method == 'POST':
-        pedidos_ids = request.POST.getlist('eliminar')
-        if pedidos_ids:
-            Pedido.objects.filter(id__in=pedidos_ids).delete()
-            messages.success(request, "Los pedidos seleccionados han sido eliminados.")
-        else:
+        pedidos_ids = request.POST.getlist('eliminar')  
+        if not pedidos_ids:
             messages.error(request, "No has seleccionado ningún pedido.")
-    return redirect('pedido_list')
+            return redirect('pedido_list')  
+
+        for pedido_id in pedidos_ids:
+            Pedido.objects.filter(id=pedido_id).delete()
+
+        messages.success(request, "Pedidos eliminados con éxito.")
+        return redirect('pedido_list')  
+
+    return redirect('pedido_list') 
