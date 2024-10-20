@@ -5,24 +5,27 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_http_methods, require_POST
 
 def pedido_list(request):
-    # Obtener todos los pedidos inicialmente
-    pedidos = Pedido.objects.all()  
-    
-    # Obtener el estado seleccionado del formulario
+    pedidos = Pedido.objects.all()
+
+    if request.method == "POST":
+        ids_a_eliminar = request.POST.getlist('eliminar')
+        if ids_a_eliminar:
+            Pedido.objects.filter(id__in=ids_a_eliminar).delete()
+            return redirect('pedido_list') 
+
     estado_seleccionado = request.GET.get('estado')
-    
-    # Filtrar los pedidos por estado si se ha seleccionado uno
+
     if estado_seleccionado:
         pedidos = pedidos.filter(estado=estado_seleccionado)
 
-    # Obtener los estados únicos de las opciones definidas en el modelo
     estados_unicos = Pedido.ESTADO_OPCIONES
 
     return render(request, 'pedidos/pedido_list.html', {
         'pedidos': pedidos,
-        'estados_unicos': estados_unicos,  # Pasar las opciones de estado al contexto
-        'estado_seleccionado': estado_seleccionado,  # Para mantener la selección en el formulario
+        'estados_unicos': estados_unicos,
+        'estado_seleccionado': estado_seleccionado, 
     })
+
 
 
 def pedido_detail(request, pk):
