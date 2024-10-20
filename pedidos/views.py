@@ -3,6 +3,8 @@ from .models import Pedido, PedidoProducto, Producto
 from .forms import PedidoForm, PedidoProductoFormSet
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_http_methods, require_POST
+from django.contrib import messages
+
 
 def pedido_list(request):
     pedidos = Pedido.objects.all()
@@ -107,3 +109,13 @@ def get_productos(request):
     productos = Producto.objects.all()
     data = [{'id': p.id, 'nombre': p.nombre, 'costo': p.costo, 'porcentaje_ganancia': p.porcentaje_ganancia} for p in productos]
     return JsonResponse(data, safe=False)
+
+def eliminar_pedidos_seleccionados(request):
+    if request.method == 'POST':
+        pedidos_ids = request.POST.getlist('eliminar')
+        if pedidos_ids:
+            Pedido.objects.filter(id__in=pedidos_ids).delete()
+            messages.success(request, "Los pedidos seleccionados han sido eliminados.")
+        else:
+            messages.error(request, "No has seleccionado ningún pedido.")
+    return redirect('pedido_list')

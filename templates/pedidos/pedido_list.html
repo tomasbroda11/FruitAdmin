@@ -14,7 +14,7 @@
         </a>
         
         <!-- Botón para eliminar pedidos seleccionados -->
-        <form method="POST" action="" class="d-inline-block">
+        <form method="POST" action="{% url 'eliminar_pedidos_seleccionados' %}" class="d-inline-block" id="delete-form">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger">
                 Eliminar seleccionados
@@ -39,7 +39,7 @@
     </form>
 
     <!-- Tabla de pedidos -->
-    <form method="POST" action="">
+    <form method="POST" action="{% url 'eliminar_pedidos_seleccionados' %}">
         {% csrf_token %}
         <div class="table-responsive">
             <table class="table table-striped align-middle">
