@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Bienvenido a BussinesManager{% endblock %}
+
+{% block content %}
+<div class="container-fluid bg-light p-5">
+    <header class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-primary">Bienvenido a BussinesManager</h1>
+        <p class="lead text-secondary">Tu solución integral para la gestión de pedidos y stock en tu negocio.</p>
+        <a href="{% url 'pedido_list' %}" class="btn btn-success btn-lg mt-3">¡Comienza a gestionar tus pedidos!</a>
+    </header>
+</div>
+
+<section class="features py-5 bg-white">
+    <div class="container">
+        <h2 class="text-center mb-4">Características Clave</h2>
+        <div class="row">
+            <div class="col-md-4 text-center mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Gestión de Pedidos</h5>
+                        <p class="card-text">Controla todos tus pedidos desde un solo lugar. Agrega, edita y elimina pedidos con facilidad.</p>
+                        <i class="bi bi-box-seam fs-1 text-primary"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-center mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Control de Stock</h5>
+                        <p class="card-text">Mantén un seguimiento detallado de tu inventario para evitar desabastecimientos.</p>
+                        <i class="bi bi-cart-fill fs-1 text-primary"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-center mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Informes Detallados</h5>
+                        <p class="card-text">Genera informes sobre tus ventas y stock en tiempo real para tomar decisiones informadas.</p>
+                        <i class="bi bi-graph-up-arrow fs-1 text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta bg-primary text-white text-center py-5">
+    <h2>¿Tenes algun problema?</h2>
+    <p class="lead">Contactate con nosotros para que te brindemos el soporte necesario.</p>
+    <a href="https://www.linkedin.com/in/tomas-broda/" class="btn btn-light btn-lg">Contactate!</a>
+</section>
+
+<footer class="bg-light text-center py-4">
+    <p class="mb-0">© 2024 BusinessManager. Todos los derechos reservados.</p>
+    <div>
+        <a href="#" class="text-secondary me-3"><i class="bi bi-facebook"></i></a>
+        <a href="#" class="text-secondary me-3"><i class="bi bi-twitter"></i></a>
+        <a href="#" class="text-secondary"><i class="bi bi-instagram"></i></a>
+    </div>
+</footer>
+
+{% endblock %}

@@ -118,9 +118,9 @@ SESSION_COOKIE_AGE = 1800  # en segundos (5 minutos)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-LOGIN_URL = '/pedidos'  # URL para la página de inicio de sesión
-LOGIN_REDIRECT_URL = '/pedidos/'  # URL de redirección después de iniciar sesión
-LOGOUT_REDIRECT_URL = '/login/'  # URL de redirección después de cerrar sesión
+LOGIN_URL = '/'  # URL para la página de inicio de sesión
+LOGIN_REDIRECT_URL = '/'  # URL de redirección después de iniciar sesión
+LOGOUT_REDIRECT_URL = '/'  # URL de redirección después de cerrar sesión
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
