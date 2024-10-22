@@ -8,4 +8,6 @@ urlpatterns = [
     path('nuevo/', views.pedido_create, name='pedido_create'),
     path('get_productos/', views.get_productos, name='get_productos'),
     path('eliminar_seleccionados/', views.eliminar_pedidos_seleccionados, name='eliminar_pedidos_seleccionados'),
+    path('pedidos/actualizar-estado/<int:pedido_id>/', views.estado_update, name='actualizar_estado_pedido'),
+    
 ]

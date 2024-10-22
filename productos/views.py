@@ -65,7 +65,6 @@ def productos_delete(request, pk):
 def productos_update(request):
     if request.method == 'POST':
         producto_id = request.POST.get('producto')
-        print(f"Producto ID: {producto_id}")
         producto = get_object_or_404(Producto, pk=producto_id)
         form = ProductoUpdateForm(request.POST, instance=producto)
         if form.is_valid():

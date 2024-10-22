@@ -37,5 +37,19 @@ class PedidoProductoForm(forms.ModelForm):
             'cantidad': forms.NumberInput(attrs={'class': 'form-control cantidad-input'}),
         }
 
+class PedidoEstadoUpdate(forms.ModelForm):
+    class Meta:
+        model = Pedido
+        fields = ['estado']
+        labels = {
+            'estado': 'Actualizar Estado del Pedido',
+        }
+        widgets = {
+            'estado': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+
+
+
 PedidoProductoFormSet = inlineformset_factory(Pedido, PedidoProducto, form=PedidoProductoForm, extra=1, can_delete=True)
 

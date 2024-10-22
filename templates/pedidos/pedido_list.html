@@ -63,14 +63,14 @@
                         <td>{{ pedido.fecha }}</td>
                         <td class="text-center">${{ pedido.precio_total }}</td>
                         <td class="text-center">
-                            {% if pedido.estado == 'en_espera' or pedido.estado == "en espera" %}
-                                <span class="badge bg-warning text-dark">En espera</span>
+                            {% if pedido.estado == 'en_espera' or pedido.estado == 'en espera' %}
+                                <a href="{% url 'actualizar_estado_pedido' pedido.id %}" class="badge bg-warning text-dark">En espera</a>
                             {% elif pedido.estado == 'procesado' %}
-                                <span class="badge bg-info">Procesado</span>
+                                <a href="{% url 'actualizar_estado_pedido' pedido.id %}" class="badge bg-info">Procesado</a>
                             {% elif pedido.estado == 'entregado' %}
-                                <span class="badge bg-success">Entregado</span>
+                                <a href="{% url 'actualizar_estado_pedido' pedido.id %}" class="badge bg-success">Entregado</a>
                             {% else %}
-                                <span class="badge bg-secondary">Desconocido</span>
+                                <a class="badge bg-secondary">Desconocido</a>
                             {% endif %}
                         </td>
                         <td class="text-center">
