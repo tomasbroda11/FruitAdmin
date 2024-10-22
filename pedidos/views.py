@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Pedido, PedidoProducto, Producto
-from .forms import PedidoForm, PedidoProductoFormSet
+from .forms import PedidoForm, PedidoProductoFormSet, PedidoEstadoUpdate
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_http_methods, require_POST
 from django.contrib import messages
@@ -124,3 +124,18 @@ def eliminar_pedidos_seleccionados(request):
         return redirect('pedido_list')  
 
     return redirect('pedido_list') 
+
+def estado_update(request,pedido_id):
+    if request.method == 'POST':
+        pedido = get_object_or_404(Pedido, pk=pedido_id)
+        form = PedidoEstadoUpdate(request.POST, instance=pedido)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Estado del pedido actualizado correctamente')
+            return redirect('pedido_list')  # Redirige a la lista de productos después de la actualización
+        else:
+            print(form.errors)
+    else:
+        form = PedidoEstadoUpdate()
+    
+    return render(request, 'pedidos/estado_update.html', {'pedido_form': form})
