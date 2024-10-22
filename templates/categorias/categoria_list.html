@@ -27,10 +27,13 @@
                 <tr>
                     <td class="text-center">{{ categoria.id }}</td>
                     <td>{{ categoria.nombre }}</td>
-                    <td>{{ categoria.contar_productos }}</td>
-                    <td class="text-center">
+                    <td >{{ categoria.contar_productos }}</td>
+                    <td >
                         <a href="{% url 'categoria_detail' categoria.pk %}" class="btn btn-outline-info btn-sm me-2">
                             <i class="bi bi-eye"></i> Ver
+                        </a>
+                        <a href="{% url 'categoria_update' categoria.pk %}" class="btn btn-outline-secondary btn-sm me-2">
+                            <i class="bi bi-eye"></i> Modificar
                         </a>
                         <button class="btn btn-outline-danger btn-sm" data-categoria-pk="{{ categoria.pk }}" onclick="deleteCategoria(this)">
                             <i class="bi bi-trash"></i> Eliminar

@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Categoria
-from .forms import CategoriaForm
+from .forms import CategoriaForm, CategoriaUpdateForm
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
+from django.contrib import messages
 
 
 
@@ -40,3 +41,20 @@ def categorias_delete(request, pk):
         return JsonResponse({'status': 'error', 'message': 'Esta categoria no existe'}, status=404)
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    
+def categorias_update(request):
+    if request.method == 'POST':
+        categoria_id = request.POST.get('categoria')
+        print(f"categoria ID: {categoria_id}")
+        categoria = get_object_or_404(categoria, pk=categoria_id)
+        form = CategoriaUpdateForm(request.POST, instance=categoria)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'categoria actualizado correctamente')
+            return redirect('categoria_list')  
+        else:
+            print(form.errors)
+    else:
+        form = CategoriaUpdateForm()
+    
+    return render(request, 'categorias/categoria_update.html', {'categoria_form': form})
