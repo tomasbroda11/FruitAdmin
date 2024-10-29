@@ -36,17 +36,12 @@ class PedidoProductoForm(forms.ModelForm):
             'producto': ProductoSelectWidget(attrs={'class': 'form-control producto-select'}),
             'cantidad': forms.NumberInput(attrs={'class': 'form-control cantidad-input'}),
         }
-
+        
 class PedidoEstadoUpdate(forms.ModelForm):
     class Meta:
         model = Pedido
-        fields = ['estado']
-        labels = {
-            'estado': 'Actualizar Estado del Pedido',
-        }
-        widgets = {
-            'estado': forms.Select(attrs={'class': 'form-control'}),
-        }
+        fields = ['estado']  
+
 
 
 
