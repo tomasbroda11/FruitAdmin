@@ -99,8 +99,6 @@ def pedido_create(request):
         'producto_formset': producto_formset,
     })
 
-
-
 def nuevo_pedido(request):
     productos = Producto.objects.all()
     return render(request, 'nuevo_pedido.html', {'productos': productos})
@@ -125,17 +123,18 @@ def eliminar_pedidos_seleccionados(request):
 
     return redirect('pedido_list') 
 
-def estado_update(request,pedido_id):
+def estado_update(request, pedido_id):
+    pedido = get_object_or_404(Pedido, pk=pedido_id)  
+
     if request.method == 'POST':
-        pedido = get_object_or_404(Pedido, pk=pedido_id)
         form = PedidoEstadoUpdate(request.POST, instance=pedido)
         if form.is_valid():
             form.save()
             messages.success(request, 'Estado del pedido actualizado correctamente')
-            return redirect('pedido_list')  # Redirige a la lista de productos después de la actualización
+            return redirect('pedido_list') 
         else:
             print(form.errors)
     else:
-        form = PedidoEstadoUpdate()
-    
-    return render(request, 'pedidos/estado_update.html', {'pedido_form': form})
+        form = PedidoEstadoUpdate(instance=pedido) 
+
+    return render(request, 'pedidos/estado_update.html', {'pedido_form': form, 'pedido': pedido})
