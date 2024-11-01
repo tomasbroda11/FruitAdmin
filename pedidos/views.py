@@ -124,9 +124,11 @@ def eliminar_pedidos_seleccionados(request):
     return redirect('pedido_list') 
 
 def estado_update(request, pedido_id):
+    print("aca entro")
     pedido = get_object_or_404(Pedido, pk=pedido_id)  
-
+    
     if request.method == 'POST':
+        print("Hasta aca llego")
         form = PedidoEstadoUpdate(request.POST, instance=pedido)
         if form.is_valid():
             form.save()
