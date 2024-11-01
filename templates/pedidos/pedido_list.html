@@ -66,9 +66,9 @@
                             {% if pedido.estado == 'en_espera' or pedido.estado == 'en espera' %}
                                 <a href="{% url 'actualizar_estado_pedido' pedido.id %}" class="badge bg-warning text-dark">En espera</a>
                             {% elif pedido.estado == 'procesado' %}
-                                <a href="{% url 'actualizar_estado_pedido' pedido.id %}" class="badge bg-info">Procesado</a>
+                                <a href="{% url 'actualizar_estado_pedido' pedido.id %}" class="badge bg-info text-dark">Procesado</a>
                             {% elif pedido.estado == 'entregado' %}
-                                <a href="{% url 'actualizar_estado_pedido' pedido.id %}" class="badge bg-success">Entregado</a>
+                                <a href="{% url 'actualizar_estado_pedido' pedido.id %}" class="badge bg-success text-dark">Entregado</a>
                             {% else %}
                                 <a class="badge bg-secondary">Desconocido</a>
                             {% endif %}

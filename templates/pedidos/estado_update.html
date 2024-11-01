@@ -9,60 +9,38 @@
             <h2><i class="fas fa-pencil-alt"></i> Actualizar pedido</h2>
         </div>
         <div class="card-body p-5">
-            <form method="POST" action="{% url 'actualizar_estado_pedido' pedido.id %}" id="pedidoEstadoUpdate">
+            <form method="POST" action="{% url 'actualizar_estado_pedido' pedido_id=pedido.id %}" id="pedidoEstadoUpdate">
                 {% csrf_token %}
                 <div class="form-group mb-4">
                     <label for="id_pedido">Id del pedido:</label><br>
                     <strong>#{{ pedido.id }}</strong>
                 </div>
-
+            
                 <div class="form-group mb-4">
                     <label for="id_estado_actual">Estado Actual</label>
                     <input type="text" id="id_estado_actual" class="form-control" value="{{ pedido.estado }}" readonly>
                 </div>
-
+            
                 <div class="form-group mb-4">
                     <label for="id_estado">Nuevo Estado</label>
                     {{ pedido_form.estado|add_class:"form-control" }}
                 </div>
-
+            
                 <div class="d-grid gap-2">
                     <a href="{% url 'pedido_list' %}" class="btn btn-secondary btn-lg">
                         <i class="fas fa-chevron-left"></i> Volver
                     </a>
-                    <button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#confirmModal">
+                    <button type="submit" class="btn btn-success btn-lg">
                         <i class="fas fa-check-circle"></i> Confirmar Actualización
                     </button>
                 </div>
-            </form>
+            </form>            
         </div>
     </div>
 </div>
 
-<!-- Modal de confirmación -->
-<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-warning">
-                <h5 class="modal-title" id="confirmModalLabel"><i class="fas fa-exclamation-triangle"></i> Confirmar Actualización</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>¿Está seguro de que desea actualizar el estado del pedido seleccionado?</p>
-                <p class="text-muted">Esta acción no se puede deshacer.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <!-- Este botón enviará el formulario -->
-                <button type="submit" class="btn btn-success" onclick="document.getElementById('pedidoEstadoUpdate').submit();">
-                    <i class="fas fa-check-circle"></i> Actualizar pedido
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- Estilos adicionales -->
+
 <style>
     body {
         background: linear-gradient(135deg, #f8f9fa, #e0f7fa);
@@ -90,10 +68,6 @@
 
     button.btn-success:hover {
         background-color: #218838;
-    }
-
-    .modal-header.bg-warning {
-        background-color: #ffc107;
     }
 </style>
 
