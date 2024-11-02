@@ -6,41 +6,30 @@
 <div class="container mt-4">
     <h2 class="text-center mb-4">Gestión de Pedidos</h2>
 
-    <!-- Contenedor para los botones -->
-    <div class="d-flex align-items-center mb-4">
-        <!-- Botón para crear un nuevo pedido -->
-        <a href="{% url 'pedido_create' %}" class="btn btn-success" style="margin-right: 0.5rem;">
-            <i class="bi bi-plus-circle"></i> Crear Nuevo Pedido
-        </a>
-
-        <!-- Botón para eliminar pedidos seleccionados -->
-        <form method="POST" action="{% url 'eliminar_pedidos_seleccionados' %}" class="d-inline-block" id="delete-form">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">
-                Eliminar seleccionados
-            </button>
-        </form>
-    </div>
-
-    <!-- Formulario para filtrado -->
-    <form method="get" action="." class="mb-4">
-        <label for="estado">Filtrar por estado:</label>
-        <div class="d-flex">
-            <select name="estado" id="estado" class="form-select me-2">
-                <option value="">Todos</option>
-                {% for value, display in estados_unicos %}
-                    <option value="{{ value }}" {% if estado_seleccionado == value %}selected{% endif %}>
-                        {{ display }}
-                    </option>
-                {% endfor %}
-            </select>
-            <button type="submit" class="btn btn-outline-secondary">Filtrar</button>
-        </div>
-    </form>
-
-    <!-- Tabla de pedidos -->
     <form method="POST" action="{% url 'eliminar_pedidos_seleccionados' %}" id="table-form">
         {% csrf_token %}
+        <div class="d-flex align-items-center flex-wrap mb-4">
+            <a href="{% url 'pedido_create' %}" class="btn btn-success" style="margin-right: 5px;">
+                <i class="bi bi-plus-circle"></i> Crear Nuevo Pedido
+            </a>
+
+            <button type="submit" class="btn btn-danger">Eliminar seleccionados</button>
+        </div>
+
+        <div class="d-flex justify-content-between mb-4">
+            <div class="d-flex ms-auto align-items-center">
+                <label for="estado" style="margin-right: 5px;">Filtrar por estado:</label>
+                <select name="estado" id="estado" class="form-select" style="margin-right: 5px;">
+                    <option value="">Todos</option>
+                    {% for value, display in estados_unicos %}
+                        <option value="{{ value }}" {% if estado_seleccionado == value %}selected{% endif %}>{{ display }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" formaction="." class="btn btn-outline-secondary">Filtrar</button>
+            </div>
+        </div>
+
+        <!-- Tabla de pedidos -->
         <div class="table-responsive">
             <table class="table table-striped align-middle">
                 <thead class="table-dark">
@@ -93,7 +82,7 @@
     </form>
 </div>
 
-<!-- Script para seleccionar/deseleccionar todos los pedidos -->
+
 <script>
     document.getElementById('select-all').onclick = function() {
         var checkboxes = document.getElementsByName('eliminar');
