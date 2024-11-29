@@ -14,7 +14,7 @@ def categorias_list(request):
 def categorias_create(request):
     if request.method == 'POST':
         form = CategoriaForm(request.POST)
-        if form.is_valid():
+        if form.is_valid(): 
             categoria = form.save(commit=False)
             categoria.save()
             return redirect('categoria_list')

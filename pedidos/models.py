@@ -2,6 +2,7 @@ from django.db import models
 from clientes.models import Cliente
 from productos.models import Producto
 from datetime import datetime
+from medios_pago.models import MedioPago
 
 class Pedido(models.Model):
     
@@ -15,7 +16,7 @@ class Pedido(models.Model):
     precio_total = models.DecimalField(max_digits=10, decimal_places=2, null=False, default=0)
     fecha = models.DateTimeField(default=datetime.now)
     estado = models.CharField(max_length=20, choices=ESTADO_OPCIONES, default='en espera')
-
+    medio_pago = models.ForeignKey(MedioPago, on_delete=models.SET_NULL,null=True,blank=True,related_name="pedidos",verbose_name="Medio de Pago")
     def __str__(self):
         if self.cliente:
             return f"Pedido {self.id} - {self.cliente.nombre}"

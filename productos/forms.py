@@ -14,9 +14,12 @@ class ProductoForm(forms.ModelForm):
     
     class Meta:
         model = Producto
-        fields = ('nombre', 'categoria', 'costo','precio' ,'cantidad', 'porcentaje_ganancia', 'tipo_medida', 'proveedor')
+        fields = ('nombre', 'categoria', 'codigo','marca','modelo','costo','precio' ,'cantidad', 'porcentaje_ganancia', 'tipo_medida', 'proveedor')
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+            'codigo': forms.TextInput(attrs={'class': 'form-control'}),
+            'marca': forms.TextInput(attrs={'class': 'form-control'}),
+            'modelo': forms.TextInput(attrs={'class': 'form-control'}),
             'costo': forms.NumberInput(attrs={'class': 'form-control', 'step': 'any'}),
             'cantidad': forms.NumberInput(attrs={'class': 'form-control', 'step': 'any'}),
             'porcentaje_ganancia': forms.NumberInput(attrs={'class': 'form-control', 'step': 'any'}),
