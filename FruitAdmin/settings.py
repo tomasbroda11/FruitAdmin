@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'stock',
     'reportes',
     'proveedores',
+    'medios_pago'
 ]
 
 MIDDLEWARE = [

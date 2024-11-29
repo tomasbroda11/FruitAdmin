@@ -2,7 +2,6 @@ from django.db import models
 from categorias.models import Categoria
 from proveedores.models import Proveedor
 from decimal import Decimal
-from django.core.exceptions import ValidationError
 
 class Producto(models.Model):
     UNIDAD = 'unidad'
@@ -14,6 +13,9 @@ class Producto(models.Model):
     ]
 
     nombre = models.CharField(max_length=25, null=False)
+    codigo = models.CharField( max_length=9,null= False,default='prod-xxx')
+    marca = models.CharField(max_length=50, null=True, blank=True)  
+    modelo = models.CharField(max_length=50, null=True, blank=True)  
     cantidad = models.DecimalField(max_digits=10, decimal_places=2, null=False)
     costo = models.DecimalField(max_digits=10, decimal_places=2, null=False)
     porcentaje_ganancia = models.DecimalField(max_digits=5, decimal_places=2, null=False)
@@ -27,15 +29,12 @@ class Producto(models.Model):
         default=UNIDAD
     )
 
-
     def calcular_precio(self):
-        
         if self.porcentaje_ganancia:
             return self.costo * (1 + self.porcentaje_ganancia / 100)
         return self.precio
     
     def save(self, *args, **kwargs):
-        
         if not self.precio and self.porcentaje_ganancia:
             self.precio = self.calcular_precio()
         elif not self.porcentaje_ganancia and self.precio:

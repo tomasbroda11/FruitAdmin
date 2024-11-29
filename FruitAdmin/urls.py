@@ -18,4 +18,6 @@ urlpatterns = [
     path('reportes/', include('reportes.urls')),
     path('proveedores/',include('proveedores.urls')),
     path('categorias/',include('categorias.urls')),
+    path('mediospago/',include('medios_pago.urls')),
+
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

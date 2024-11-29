@@ -45,33 +45,33 @@
     </form>
     <!-- Tabla de productos -->
     <div class="table-responsive">
-        <table class="table table-striped  align-middle">
-            <thead class="table-dark ">
+        <table class="table table-striped align-middle">
+            <thead class="table-dark">
                 <tr>
-                    <th>Id Producto</th>
+                    <th>Codigo</th>
                     <th>Nombre</th>
+                    <th>Marca</th> <!-- Nueva columna -->
+                    <th>Modelo</th> <!-- Nueva columna -->
                     <th>Costo</th>
                     <th>Precio</th>
                     <th>Categoría</th>
                     <th>Proveedor</th>
                     <th>Stock actual</th>
-                    <th>Tipo de medida</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {% for producto in productos %}
-                <tr >
-                    <td class="text-center">{{ producto.id }}</td>
+                <tr>
+                    <td class="text-center">{{ producto.codigo }}</td>
                     <td>{{ producto.nombre }}</td>
+                    <td>{{ producto.marca|default:"-" }}</td>
+                    <td>{{ producto.modelo|default:"-" }}</td>
                     <td>${{ producto.costo }}</td>
                     <td>${{ producto.precio }}</td>
                     <td>{{ producto.categoria.nombre }}</td>
                     <td>{{ producto.proveedor.nombre }}</td>
-                    <td class="text-center">
-                        {{ producto.cantidad }}{% if producto.tipo_medida == 'peso' %} kg{% endif %}
-                    </td>
-                    <td>{{ producto.get_tipo_medida_display }}</td>
+                    <td>{{ producto.cantidad }}</td>
                     <td class="text-center">
                         <a href="{% url 'producto_detail' producto.pk %}" class="btn btn-outline-info btn-sm me-2">
                             <i class="bi bi-eye"></i> Ver
@@ -83,12 +83,12 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="8" class="text-center">No hay productos cargados.</td>
+                    <td colspan="11" class="text-center">No hay productos cargados.</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-    </div>
+    </div>    
 </div>
 
 <script>

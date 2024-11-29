@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Medio de Pago #{{ mediopago.id }} - {{ mediopago.nombre }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 50vh;">
+    <div class="card text-bg-light shadow-lg" style="width: 40rem; border-radius: 15px;">  <!-- Ancho de la card aumentado -->
+        <div class="card-header text-center bg-info text-white" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
+            <h4 class="card-title mb-0">Detalles del Medio de Pago #{{ mediopago.id }}</h4>
+        </div>
+        <div class="card-body px-5 py-4">
+            <p><strong>Nombre:</strong> {{ mediopago.nombre }}</p>
+        </div>
+        <div class="card-footer d-flex justify-content-between px-5 py-3">
+            <a href="{% url 'medios_pago_list' %}" class="btn btn-secondary">Volver</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
