@@ -3,16 +3,18 @@ from .models import Pedido, PedidoProducto
 from clientes.models import Cliente
 from productos.models import Producto
 from django.forms import inlineformset_factory
+from medios_pago.models import MedioPago
 
 class PedidoForm(forms.ModelForm):
     cliente = forms.ModelChoiceField(queryset=Cliente.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-    
+    medio_pago = forms.ModelChoiceField(queryset=MedioPago.objects.all(),widget=forms.Select(attrs={'class': 'form-control'}))    
     class Meta:
         model = Pedido
-        fields = ['cliente', 'estado']
+        fields = ['cliente', 'estado','medio_pago']
         widgets = {
             'cliente': forms.Select(attrs={'class': 'form-control'}),
             'estado': forms.Select(attrs={'class': 'form-control'}),
+            'medio_pago': forms.Select(attrs={'class': 'form-control'}),
         }
 
 class ProductoSelectWidget(forms.Select):
