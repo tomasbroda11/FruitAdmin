@@ -39,6 +39,7 @@
                         <th>Cliente</th>
                         <th>Fecha</th>
                         <th>Precio Total</th>
+                        <th>Medio pago</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -51,6 +52,7 @@
                         <td>{{ pedido.cliente.nombre }}</td>
                         <td>{{ pedido.fecha }}</td>
                         <td class="text-center">${{ pedido.precio_total }}</td>
+                        <td class="text-center">{{ pedido.medio_pago |default:"-" }}</td>
                         <td class="text-center">
                             {% if pedido.estado == 'en_espera' or pedido.estado == 'en espera' %}
                                 <a href="{% url 'actualizar_estado_pedido' pedido.id %}" class="badge bg-warning text-dark">En espera</a>

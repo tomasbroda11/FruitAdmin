@@ -22,7 +22,6 @@
         <!-- Formulario de carga de productos -->
         <form method="post" enctype="multipart/form-data" action="{% url 'producto_upload_excel' %}" class="d-flex">
             {% csrf_token %}
-            {{ form.as_p }}
             <div class="input-group">
                 <input class="form-control" type="file" id="formFile" name="archivo" aria-label="Seleccione archivo">
                 <button type="submit" class="btn btn-primary ms-2">
@@ -31,6 +30,7 @@
             </div>
         </form>
     </div>
+
     <form method="get" action="." style="margin-bottom: 1rem;">
         <label for="categoria">Filtrar por categoría:</label>
         <select name="categoria" id="categoria" class="form-select">
@@ -43,27 +43,134 @@
         </select>
         <button type="submit" class="btn btn-outline-secondary">Filtrar</button>
     </form>
+
+    <style>
+        th {
+            white-space: nowrap; /* Evita saltos de línea en los encabezados */
+            vertical-align: middle; /* Alinea el texto verticalmente */
+        }
+
+        .ordenar {
+            display: inline-flex;
+            flex-direction: column; /* Flechas en vertical */
+            align-items: center;
+            margin-left: 5px; /* Espacio entre texto y flechas */
+            font-size: 0.8rem; /* Tamaño reducido */
+        }
+
+        .btn-orden {
+            border: none;
+            background: transparent;
+            padding: 0;
+            cursor: pointer;
+            color: #f8f9fa; /* Color de las flechas */
+        }
+
+        .btn-orden:hover {
+            color: #ffc107; /* Cambia a amarillo al pasar el cursor */
+        }
+
+        .table-responsive {
+            overflow-x: auto; /* Desplazamiento horizontal si es necesario */
+        }
+
+        .table th,
+        .table td {
+            text-align: center; /* Alineación de texto en las celdas */
+        }
+
+        .table th:last-child,
+        .table td:last-child {
+            text-align: center; /* Alineación del último botón "Acción" */
+            vertical-align: top;
+        }
+
+        .table td {
+            vertical-align: middle; /* Alineación vertical en todas las filas */
+        }
+
+        .table thead th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+        }
+    </style>
+
     <!-- Tabla de productos -->
     <div class="table-responsive">
         <table class="table table-striped align-middle">
             <thead class="table-dark">
                 <tr>
-                    <th>Codigo</th>
-                    <th>Nombre</th>
-                    <th>Marca</th> <!-- Nueva columna -->
-                    <th>Modelo</th> <!-- Nueva columna -->
-                    <th>Costo</th>
-                    <th>Precio</th>
-                    <th>Categoría</th>
-                    <th>Proveedor</th>
-                    <th>Stock actual</th>
-                    <th>Acciones</th>
+                    <th>
+                        Código
+                        <span class="ordenar">
+                            <button class="btn btn-sm btn-orden" title="Orden ascendente" onclick="ordenar('codigo', 'asc')">▲</button>
+                            <button class="btn btn-sm btn-orden" title="Orden descendente" onclick="ordenar('codigo', 'desc')">▼</button>
+                        </span>
+                    </th>
+                    <th>
+                        Nombre
+                        <span class="ordenar">
+                            <button class="btn btn-sm btn-orden" title="Orden ascendente" onclick="ordenar('nombre', 'asc')">▲</button>
+                            <button class="btn btn-sm btn-orden" title="Orden descendente" onclick="ordenar('nombre', 'desc')">▼</button>
+                        </span>
+                    </th>
+                    <th>
+                        Marca
+                        <span class="ordenar">
+                            <button class="btn btn-sm btn-orden" title="Orden ascendente" onclick="ordenar('marca', 'asc')">▲</button>
+                            <button class="btn btn-sm btn-orden" title="Orden descendente" onclick="ordenar('marca', 'desc')">▼</button>
+                        </span>
+                    </th>
+                    <th>
+                        Modelo
+                        <span class="ordenar">
+                            <button class="btn btn-sm btn-orden" title="Orden ascendente" onclick="ordenar('modelo', 'asc')">▲</button>
+                            <button class="btn btn-sm btn-orden" title="Orden descendente" onclick="ordenar('modelo', 'desc')">▼</button>
+                        </span>
+                    </th>
+                    <th>
+                        Costo
+                        <span class="ordenar">
+                            <button class="btn btn-sm btn-orden" title="Orden ascendente" onclick="ordenar('costo', 'asc')">▲</button>
+                            <button class="btn btn-sm btn-orden" title="Orden descendente" onclick="ordenar('costo', 'desc')">▼</button>
+                        </span>
+                    </th>
+                    <th>
+                        Precio
+                        <span class="ordenar">
+                            <button class="btn btn-sm btn-orden" title="Orden ascendente" onclick="ordenar('precio', 'asc')">▲</button>
+                            <button class="btn btn-sm btn-orden" title="Orden descendente" onclick="ordenar('precio', 'desc')">▼</button>
+                        </span>
+                    </th>
+                    <th>
+                        Categoría
+                        <span class="ordenar">
+                            <button class="btn btn-sm btn-orden" title="Orden ascendente" onclick="ordenar('categoria', 'asc')">▲</button>
+                            <button class="btn btn-sm btn-orden" title="Orden descendente" onclick="ordenar('categoria', 'desc')">▼</button>
+                        </span>
+                    </th>
+                    <th>
+                        Proveedor
+                        <span class="ordenar">
+                            <button class="btn btn-sm btn-orden" title="Orden ascendente" onclick="ordenar('proveedor', 'asc')">▲</button>
+                            <button class="btn btn-sm btn-orden" title="Orden descendente" onclick="ordenar('proveedor', 'desc')">▼</button>
+                        </span>
+                    </th>
+                    <th>
+                        Stock actual
+                        <span class="ordenar">
+                            <button class="btn btn-sm btn-orden" title="Orden ascendente" onclick="ordenar('cantidad', 'asc')">▲</button>
+                            <button class="btn btn-sm btn-orden" title="Orden descendente" onclick="ordenar('cantidad', 'desc')">▼</button>
+                        </span>
+                    </th>
+                    <th>Acción</th>
                 </tr>
             </thead>
+
             <tbody>
                 {% for producto in productos %}
                 <tr>
-                    <td class="text-center">{{ producto.codigo }}</td>
+                    <td>{{ producto.codigo }}</td>
                     <td>{{ producto.nombre }}</td>
                     <td>{{ producto.marca|default:"-" }}</td>
                     <td>{{ producto.modelo|default:"-" }}</td>
@@ -83,36 +190,20 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="11" class="text-center">No hay productos cargados.</td>
+                    <td colspan="10" class="text-center">No hay productos cargados.</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-    </div>    
+    </div>
 </div>
 
 <script>
-    function deleteProducto(element) {
-        const productoId = element.getAttribute('data-producto-pk');
-        const nombreProducto = element.getAttribute('nombre-producto');
-        if (confirm(`¿Estás seguro de que deseas eliminar el producto ${nombreProducto}?`)) {
-            fetch(`/productos/${productoId}/delete/`, {  
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
-                    'Content-Type': 'application/json'
-                }
-            }).then(response => {
-                if (response.ok) {
-                    window.location.reload();
-                } else {
-                    alert('No se pudo eliminar el producto.');
-                }
-            }).catch(error => {
-                console.error('Error:', error);
-                alert('Ocurrió un error al intentar eliminar el producto.');
-            });
-        }
+    function ordenar(columna, orden) {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('ordenar_por', columna);
+        urlParams.set('orden', orden);
+        window.location.search = urlParams.toString();
     }
 </script>
-{% endblock %}
+{% endblock %}

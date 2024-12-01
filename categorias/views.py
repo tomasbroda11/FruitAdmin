@@ -45,7 +45,6 @@ def categorias_delete(request, pk):
 def categorias_update(request):
     if request.method == 'POST':
         categoria_id = request.POST.get('categoria')
-        print(f"categoria ID: {categoria_id}")
         categoria = get_object_or_404(categoria, pk=categoria_id)
         form = CategoriaUpdateForm(request.POST, instance=categoria)
         if form.is_valid():

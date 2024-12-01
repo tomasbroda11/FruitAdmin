@@ -15,7 +15,7 @@ def mediospago_create(request):
         if form.is_valid(): 
             mediopago = form.save(commit=False)
             mediopago.save()
-            return redirect('mediopago_list')
+            return redirect('medios_pago_list')
         else:
             print(form.errors)
     else:
@@ -40,19 +40,16 @@ def mediospago_delete(request, pk):
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
-def mediospago_update(request):
+def mediospago_update(request, pk):  
+    mediopago = get_object_or_404(MedioPago, pk=pk) 
     if request.method == 'POST':
-        mediopago_id = request.POST.get('mediopago')
-        print(f"mediopago ID: {mediopago_id}")
-        mediopago = get_object_or_404(mediopago, pk=mediopago_id)
         form = MediospagoForm(request.POST, instance=mediopago)
         if form.is_valid():
             form.save()
             messages.success(request, 'Medio de pago actualizado correctamente')
-            return redirect('mediospago/mediospago_list')  
+            return redirect('medios_pago_list')  
         else:
             print(form.errors)
     else:
-        form = MediospagoUpdateForm()
-    
-    return render(request, 'mediospago/mediospago_form.html', {'categoria_form': form})
+        form = MediospagoForm(instance=mediopago)
+    return render(request, 'mediospago/mediospago_form.html', {'form': form})

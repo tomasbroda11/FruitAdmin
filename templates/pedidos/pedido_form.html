@@ -33,6 +33,10 @@
                     {{ pedido_form.cliente|add_class:"form-control" }}
                 </div>
                 <div class="form-group">
+                    {{ pedido_form.medio_pago.label_tag }}
+                    {{ pedido_form.medio_pago|add_class:"form-control" }}
+                </div>                
+                <div class="form-group">
                     {{ pedido_form.estado.label_tag }}
                     {{ pedido_form.estado|add_class:"form-control" }}
                 </div>
