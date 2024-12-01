@@ -8,13 +8,33 @@ import pandas as pd
 from decimal import Decimal
 
 def productos_list(request):
-    categoria_id = request.GET.get('categoria')  # Obtén la categoría de los parámetros de consulta
+    # Obtén la categoría de los parámetros de consulta
+    categoria_id = request.GET.get('categoria')
+    ordenar_por = request.GET.get('ordenar_por', 'nombre')  # Ordenar por 'nombre' por defecto
+    orden = request.GET.get('orden', 'asc')  # Orden ascendente por defecto
+
     if categoria_id:
-        productos = Producto.objects.filter(categoria_id=categoria_id)  
+        productos = Producto.objects.filter(categoria_id=categoria_id)
     else:
-        productos = Producto.objects.all()  
-    categorias = Categoria.objects.all()  
-    return render(request,'productos/producto_list.html',{'productos': productos, 'categorias':categorias})
+        productos = Producto.objects.all()
+
+    # Aplica el ordenamiento basado en los parámetros
+    if ordenar_por:
+        if orden == 'desc':
+            productos = productos.order_by(f"-{ordenar_por}")  # Orden descendente
+        else:
+            productos = productos.order_by(ordenar_por)  # Orden ascendente
+
+    categorias = Categoria.objects.all()  # Lista de categorías para el filtro
+
+    # Renderiza la plantilla con los productos y los parámetros de ordenamiento
+    return render(request, 'productos/producto_list.html', {
+        'productos': productos,
+        'categorias': categorias,
+        'ordenar_por': ordenar_por,
+        'orden': orden,
+    })
+
 
 def productos_create(request):
     if request.method == 'POST':
