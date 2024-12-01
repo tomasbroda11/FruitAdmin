@@ -6,43 +6,59 @@
 <div class="container mt-4">
     <h2 class="text-center mb-4">Gestión de Productos</h2>
 
-    <!-- Botones de acción -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <a href="{% url 'producto_create' %}" class="btn btn-success me-2">
-                <i class="bi bi-plus-circle"></i> Cargar Nuevo Producto
-            </a>
-            <a href="{% url 'producto_update' %}" class="btn btn-warning">
-                <i class="bi bi-pencil-square"></i> Actualizar Producto
-            </a>
-            <a href="{% url 'update_masivo' %}" class="btn text-white" style="background-color: blueviolet;">
-                <i class="bi bi-pencil-square"></i> Actualizar Precios
-            </a>
+    <!-- Contenedor principal para las acciones -->
+    <div class="card p-3 mb-4" >
+        <div class="row align-items-center">
+            <!-- Botones de acción -->
+            <div class="col-md-6 mb-3 mb-md-0 d-flex flex-wrap gap-2">
+                <a href="{% url 'producto_create' %}" class="btn btn-success me-2" style="margin-right: 0.5rem;">
+                    <i class="bi bi-plus-circle"></i> Nuevo Producto
+                </a>
+                <a href="{% url 'producto_update' %}" class="btn btn-warning me-2" style="margin-right: 0.5rem;">
+                    <i class="bi bi-pencil-square"></i> Editar Producto
+                </a>
+                <a href="{% url 'update_masivo' %}" class="btn text-white me-2" style="background-color: blueviolet;">
+                    <i class="bi bi-pencil-square"></i> Actualizar Precios
+                </a>
+            </div>
+            <!-- Formulario de carga de productos -->
+            <div class="col-md-6" >
+                <form method="post" enctype="multipart/form-data" action="{% url 'producto_upload_excel' %}" class="d-flex align-items-center">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input class="form-control" type="file" id="formFile" name="archivo" aria-label="Seleccione archivo">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-upload"></i> Cargar productos
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <!-- Formulario de carga de productos -->
-        <form method="post" enctype="multipart/form-data" action="{% url 'producto_upload_excel' %}" class="d-flex">
-            {% csrf_token %}
-            <div class="input-group">
-                <input class="form-control" type="file" id="formFile" name="archivo" aria-label="Seleccione archivo">
-                <button type="submit" class="btn btn-primary ms-2">
-                    <i class="bi bi-upload"></i> Cargar productos
+    </div>
+
+    <!-- Filtro de categoría -->
+    <div class="card p-3 mb-4" style="background:gainsboro">
+        <form method="get" action=".">
+            <div class="d-flex align-items-end">
+                <div class="me-2">
+                    <label for="categoria" class="form-label"><strong>Filtrar por categoría:</strong></label>
+                    <select name="categoria" id="categoria" class="form-select" style="margin-right: 0.5rem ;">
+                        <option value="">Todas</option>
+                        {% for categoria in categorias %}
+                            <option value="{{ categoria.id }}" {% if request.GET.categoria == categoria.id|stringformat:"s" %}selected{% endif %}>
+                                {{ categoria.nombre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-light">
+                    <i class="bi bi-funnel"></i> Filtrar
                 </button>
             </div>
         </form>
     </div>
 
-    <form method="get" action="." style="margin-bottom: 1rem;">
-        <label for="categoria">Filtrar por categoría:</label>
-        <select name="categoria" id="categoria" class="form-select">
-            <option value="">Todas</option>
-            {% for categoria in categorias %}
-                <option value="{{ categoria.id }}" {% if request.GET.categoria == categoria.id|stringformat:"s" %}selected{% endif %}>
-                    {{ categoria.nombre }}
-                </option>
-            {% endfor %}
-        </select>
-        <button type="submit" class="btn btn-outline-secondary">Filtrar</button>
-    </form>
+
 
     <style>
         th {
@@ -163,7 +179,7 @@
                             <button class="btn btn-sm btn-orden" title="Orden descendente" onclick="ordenar('cantidad', 'desc')">▼</button>
                         </span>
                     </th>
-                    <th>Acción</th>
+                    <th>Acciónes</th>
                 </tr>
             </thead>
 
@@ -180,20 +196,22 @@
                     <td>{{ producto.proveedor.nombre }}</td>
                     <td>{{ producto.cantidad }}</td>
                     <td class="text-center">
-                        <a href="{% url 'producto_detail' producto.pk %}" class="btn btn-outline-info btn-sm me-2">
-                            <i class="bi bi-eye"></i> Ver
-                        </a>
-                        <button class="btn btn-outline-danger btn-sm" data-producto-pk="{{ producto.pk }}" nombre-producto="{{ producto.nombre }}" onclick="deleteProducto(this)">
-                            <i class="bi bi-trash"></i> Eliminar
-                        </button>
-                    </td>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <a href="{% url 'producto_detail' producto.pk %}" class="btn btn-outline-info btn-sm me-2" style="margin-right: 0.5rem;">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <button class="btn btn-outline-danger btn-sm" data-producto-pk="{{ producto.pk }}" nombre-producto="{{ producto.nombre }}" onclick="deleteProducto(this)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </td>                    
                 </tr>
                 {% empty %}
                 <tr>
                     <td colspan="10" class="text-center">No hay productos cargados.</td>
                 </tr>
                 {% endfor %}
-            </tbody>
+            </tbody>            
         </table>
     </div>
 </div>

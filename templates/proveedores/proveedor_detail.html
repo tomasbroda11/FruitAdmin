@@ -14,6 +14,21 @@
             <p><strong>Email:</strong> {{ proveedor.email }}</p>
             <p><strong>Teléfono:</strong> {{ proveedor.telefono }}</p>
             <p><strong>Dirección:</strong> {{ proveedor.direccion }}</p>
+
+            <h5>Productos del proveedor</h5>
+            {% if proveedor.producto_set.all %}
+                <ul class="list-unstyled"> <!-- Estilo de lista para mejor visualización -->
+                    {% for producto in proveedor.producto_set.all %}
+                        <li class="d-flex justify-content-start align-items-center"> <!-- Alineación en una sola línea -->
+                            <span  style="margin-left:0.5rem;margin-right:0.5rem;"><strong>Producto</strong> #{{ producto.id }} </span><span>&#8212;</span>
+                            <span  style="margin-left:0.5rem; margin-right:0.5rem;"><strong> Nombre:</strong> {{ producto.nombre }} </span><span>&#8212;</span>
+                            <a href="{% url 'producto_detail' producto.id %}" class="badge rounded-pill text-white bg-primary" style="margin-left:0.5rem; margin-right:0.5rem;">Ver producto</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Este cliente aún no ha realizado ningún pedido.</p>
+            {% endif %}
         </div>
         <div class="card-footer d-flex justify-content-between px-5 py-3">
             <a href="{% url 'proveedores_list' %}" class="btn btn-secondary">Volver</a>
