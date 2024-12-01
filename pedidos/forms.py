@@ -26,6 +26,7 @@ class ProductoSelectWidget(forms.Select):
             try:
                 producto = Producto.objects.get(pk=value)
                 option['attrs']['data-precio'] = str(producto.costo)
+                option['label'] = f"{producto.codigo} - {producto.nombre}"  # Personaliza la etiqueta aquí
             except Producto.DoesNotExist:
                 pass
         return option
