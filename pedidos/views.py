@@ -92,12 +92,20 @@ def pedido_create(request):
     else:
         pedido_form = PedidoForm()
         producto_formset = PedidoProductoFormSet(prefix='pedidoproducto_set')
+        
+        # Obtener los productos con el formato deseado
+        productos = Producto.objects.all()
+        productos_context = [
+            {"id": producto.id, "display": f"{producto.codigo} - {producto.nombre}"}
+            for producto in productos
+        ]
 
-    
     return render(request, 'pedidos/pedido_form.html', {
         'pedido_form': pedido_form,
         'producto_formset': producto_formset,
+        'productos': productos_context,  # Pasamos los productos al template
     })
+
 
 def nuevo_pedido(request):
     productos = Producto.objects.all()
