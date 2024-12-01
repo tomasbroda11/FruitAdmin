@@ -6,6 +6,8 @@ from django.http import JsonResponse
 from django.contrib import messages
 import pandas as pd
 from decimal import Decimal
+from django.db.models import Count
+
 
 def productos_list(request):
     # Obtén la categoría de los parámetros de consulta
@@ -25,7 +27,8 @@ def productos_list(request):
         else:
             productos = productos.order_by(ordenar_por)  # Orden ascendente
 
-    categorias = Categoria.objects.all()  # Lista de categorías para el filtro
+    # Anotamos cada categoría con la cantidad de productos
+    categorias = Categoria.objects.annotate(product_count=Count('producto'))
 
     # Renderiza la plantilla con los productos y los parámetros de ordenamiento
     return render(request, 'productos/producto_list.html', {
@@ -34,7 +37,6 @@ def productos_list(request):
         'ordenar_por': ordenar_por,
         'orden': orden,
     })
-
 
 def productos_create(request):
     if request.method == 'POST':

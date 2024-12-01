@@ -36,17 +36,16 @@
         </div>
     </div>
 
-    <!-- Filtro de categoría -->
     <div class="card p-3 mb-4" style="background:gainsboro">
         <form method="get" action=".">
             <div class="d-flex align-items-end">
                 <div class="me-2">
                     <label for="categoria" class="form-label"><strong>Filtrar por categoría:</strong></label>
-                    <select name="categoria" id="categoria" class="form-select" style="margin-right: 0.5rem ;">
+                    <select name="categoria" id="categoria" class="form-select" style="margin-right: 0.5rem;">
                         <option value="">Todas</option>
                         {% for categoria in categorias %}
                             <option value="{{ categoria.id }}" {% if request.GET.categoria == categoria.id|stringformat:"s" %}selected{% endif %}>
-                                {{ categoria.nombre }}
+                                {{ categoria.nombre }} ({{ categoria.product_count }})
                             </option>
                         {% endfor %}
                     </select>
@@ -57,7 +56,6 @@
             </div>
         </form>
     </div>
-
 
 
     <style>
