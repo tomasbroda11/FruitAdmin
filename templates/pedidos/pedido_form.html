@@ -4,7 +4,7 @@
 {% load form_filters %}
 {% block content %}
 <div class="container">
-    <h2>Nuevo Pedido</h2>
+    <h2 class="mb-4 text-center">Nuevo Pedido</h2>
     <form method="post">
         {% csrf_token %}
         <!-- Bloque para mostrar mensajes de error -->
@@ -22,50 +22,51 @@
                 </ul>
             </div>
         {% endif %}
+        
         <!-- Sección de Información del Pedido -->
         <div class="card mb-4">
-            <div class="card-header">
+            <div class="card-header bg-info text-white">
                 Información del Pedido
             </div>
             <div class="card-body">
-                <div class="form-group">
+                <div class="form-group mb-3">
                     {{ pedido_form.cliente.label_tag }}
                     {{ pedido_form.cliente|add_class:"form-control" }}
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-3">
                     {{ pedido_form.medio_pago.label_tag }}
                     {{ pedido_form.medio_pago|add_class:"form-control" }}
                 </div>                
-                <div class="form-group">
+                <div class="form-group mb-3">
                     {{ pedido_form.estado.label_tag }}
                     {{ pedido_form.estado|add_class:"form-control" }}
                 </div>
             </div>
         </div>
 
-       <!-- Sección de Productos -->
+        <!-- Sección de Productos -->
         <div class="card mb-4">
-            <div class="card-header">
+            <div class="card-header bg-info text-white">
                 Productos
             </div>
             <div class="card-body">
                 <div id="producto-formset">
                     {{ producto_formset.management_form }}
                     {% for form in producto_formset.forms %}
-                    <div class="form-group row align-items-center">
+                    <div class="form-group row align-items-center mb-3">
                         <div class="col-md-5">
                             {{ form.producto.label_tag }}
                             {{ form.producto|add_class:"form-control producto-select" }}
                         </div>
                         <div class="col-md-3">
                             <label>Precio Unitario</label>
-                            <input type="text" class="form-control precio-unitario"                 readonly>
+                            <input type="text" class="form-control precio-unitario" readonly>
                         </div>
                         <div class="col-md-2">
                             {{ form.cantidad.label_tag }}
                             {{ form.cantidad|add_class:"form-control cantidad-input" }}
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2 text-end">
                             <button type="button" class="btn btn-danger" onclick="removeForm(this)">Eliminar</button>
                         </div>
                     </div>
@@ -75,10 +76,20 @@
             </div>
         </div>
 
+        <!-- Total del Pedido -->
+        <div class="total-container mt-4 p-3 rounded shadow-sm">
+            <h5 class="text-center">Total del Pedido</h5>
+            <div class="d-flex justify-content-center align-items-center">
+                <span class="total-label me-2">Importe Total:</span>
+                <span id="total-pedido" class="total-amount">$0.00</span>
+            </div>
+        </div>
 
         <!-- Acciones -->
-        <a href="{% url 'pedido_list' %}" class="btn btn-secondary" style="margin-bottom: 3rem;">Volver</a>
-        <button type="submit" class="btn btn-primary" style="margin-bottom: 3rem;">Crear Pedido</button>
+        <div class="d-flex justify-content-between mt-4" style="margin-bottom: 5rem;">
+            <a href="{% url 'pedido_list' %}" class="btn btn-secondary">Volver</a>
+            <button type="submit" class="btn btn-primary">Crear Pedido</button>
+        </div>
     </form>
 </div>
 
@@ -91,6 +102,9 @@
                 updatePrecioUnitario(this);
             });
         });
+
+        // Actualizar el total inicial
+        updateTotal();
     });
 
     function addForm() {
@@ -114,6 +128,9 @@
         newForm.querySelector('.producto-select').addEventListener('change', function () {
             updatePrecioUnitario(this);
         });
+
+        // Actualizar total
+        updateTotal();
     }
 
     function removeForm(button) {
@@ -124,23 +141,54 @@
         // Actualizar el total de formularios en el formset
         var totalForms = document.querySelectorAll('#producto-formset .form-group').length;
         document.getElementById('id_pedidoproducto_set-TOTAL_FORMS').value = totalForms;
+
+        // Actualizar total
+        updateTotal();
     }
 
     function updatePrecioUnitario(selectElement) {
-        console.log('Producto cambiado');
-        // Obtener el precio del producto seleccionado y actualizar el campo de precio
         var selectedOption = selectElement.options[selectElement.selectedIndex];
-        var precioUnitario = selectedOption.getAttribute('data-precio');  // Aquí se espera que la opción tenga un data-precio
-        console.log('Precio unitario:', precioUnitario);
+        var precioUnitario = selectedOption.getAttribute('data-precio');
         var precioInput = selectElement.closest('.form-group').querySelector('.precio-unitario');
 
         if (precioInput) {
             precioInput.value = precioUnitario ? parseFloat(precioUnitario).toFixed(2) : '0.00';
-        } else {
-            console.error('No se encontró el campo de precio unitario');
         }
+        updateTotal();
+    }
+
+    function updateTotal() {
+        let total = 0;
+        document.querySelectorAll('#producto-formset .form-group').forEach(formGroup => {
+            const precio = parseFloat(formGroup.querySelector('.precio-unitario').value || 0);
+            const cantidad = parseFloat(formGroup.querySelector('.cantidad-input').value || 0);
+            total += precio * cantidad;
+        });
+        document.getElementById('total-pedido').textContent = `$${total.toFixed(2)}`;
     }
 </script>
 
+<style>
+    .total-container {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        margin: 20px auto;
+        max-width: 400px;
+    }
+    .total-container h5 {
+        font-weight: bold;
+        color: #495057;
+        margin-bottom: 15px;
+    }
+    .total-label {
+        font-weight: bold;
+        font-size: 1.1rem;
+        color: #6c757d;
+    }
+    .total-amount {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #198754;
+    }
+</style>
 {% endblock %}
-
