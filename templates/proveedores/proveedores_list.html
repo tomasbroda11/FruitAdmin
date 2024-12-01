@@ -36,15 +36,15 @@
                     <td>{{ proveedor.email }}</td>
                     <td>{{ proveedor.telefono }}</td>
                     <td>{{ proveedor.direccion }}</td>
-                    <td class="text-center">
-                        <a href="{% url 'proveedor_detail' proveedor.pk %}" class="btn btn-outline-info btn-sm me-2">
-                            <i class="bi bi-eye"></i> Detalles
+                    <td class="d-flex text-center">
+                        <a href="{% url 'proveedor_detail' proveedor.pk %}" title="Detalles" class="btn btn-outline-info btn-sm me-2" style="margin-right: 0.5rem;">
+                            <i class="bi bi-eye"></i> 
                         </a>
-                        <a href="{% url 'proveedor_update' proveedor.pk %}" class="btn btn-outline-secondary btn-sm me-2">
-                            <i class="bi bi-pencil"></i> Modificar
+                        <a href="{% url 'proveedor_update' proveedor.pk %}" title="Actualizar proveedor" class="btn btn-outline-secondary btn-sm me-2" style="margin-right: 0.5rem;">
+                            <i class="bi bi-pencil"></i>
                         </a>
-                        <button class="btn btn-outline-danger btn-sm" data-proveedor-pk="{{ proveedor.pk }}" nombre-proveedor="{{ proveedor.nombre }}" onclick="deleteProveedor(this)">
-                            <i class="bi bi-trash"></i> Eliminar
+                        <button class="btn btn-outline-danger btn-sm" data-proveedor-pk="{{ proveedor.pk }}" title="Elimniar" nombre-proveedor="{{ proveedor.nombre }}" onclick="deleteProveedor(this)">
+                            <i class="bi bi-trash"></i>
                         </button>
                     </td>
                 </tr>

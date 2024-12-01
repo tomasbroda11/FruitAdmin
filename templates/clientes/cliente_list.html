@@ -18,13 +18,13 @@
         <table class="table table-striped align-middle">
             <thead class="table-dark text-center">
                 <tr>
-                    <th>Id Cliente</th>
-                    <th>Nombre</th>
-                    <th>CUIT/CUIL</th>
-                    <th>Email</th>
-                    <th>Teléfono</th>
-                    <th>Dirección</th>
-                    <th>Acciones</th>
+                    <th class="align-middle">Id Cliente</th>
+                    <th class="align-middle">Nombre</th>
+                    <th class="align-middle">CUIT/CUIL</th>
+                    <th class="align-middle">Email</th>
+                    <th class="align-middle">Teléfono</th>
+                    <th class="align-middle">Dirección</th>
+                    <th class="align-middle">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,14 +37,14 @@
                     <td>{{ cliente.telefono }}</td>
                     <td>{{ cliente.direccion }}</td>
                     <td class="text-center">
-                        <a href="{% url 'cliente_detail' cliente.pk %}" class="btn btn-outline-info btn-sm me-2">
-                            <i class="bi bi-eye"></i> Detalles
+                        <a href="{% url 'cliente_detail' cliente.pk %}" title="Detalles cliente" class="btn btn-outline-info btn-sm me-2">
+                            <i class="bi bi-eye"></i> 
                         </a>
-                        <a href="{% url 'cliente_update' cliente.pk %}" class="btn btn-outline-secondary btn-sm me-2">
-                            <i class="bi bi-pencil"></i> Modificar
+                        <a href="{% url 'cliente_update' cliente.pk %}" title="Actualizar cliente" class="btn btn-outline-secondary btn-sm me-2">
+                            <i class="bi bi-pencil"></i> 
                         </a>
-                        <button class="btn btn-outline-danger btn-sm" data-cliente-pk="{{ cliente.pk }}" nombre-cliente="{{ cliente.nombre }}" onclick="deleteCliente(this)">
-                            <i class="bi bi-trash"></i> Eliminar
+                        <button class="btn btn-outline-danger btn-sm" title="Eliminar cliente" data-cliente-pk="{{ cliente.pk }}" nombre-cliente="{{ cliente.nombre }}" onclick="deleteCliente(this)">
+                            <i class="bi bi-trash"></i> 
                         </button>
                     </td>
                 </tr>

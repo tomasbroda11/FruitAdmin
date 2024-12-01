@@ -128,6 +128,11 @@ LOGOUT_REDIRECT_URL = '/'  # URL de redirección después de cerrar sesión
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+ARCA_CERTIFICATE_PATH = "C:/Users/tomas/OneDrive/Escritorio/certificados-testing-tomas/cert-test1.pem"
+ARCA_PRIVATE_KEY_PATH = "C:/Users/tomas/OneDrive/Escritorio/certificados-testing-tomas/keytest.pem"
+ARCA_WS_URL = "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl"  # URL del entorno de testing
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 

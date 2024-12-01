@@ -27,7 +27,7 @@
                     <div class="card-body text-success">
                         <h5 class="card-title">Pedidos de este Mes</h5>
                         <p class="card-text">Cantidad: <strong>{{ pedidos_mes.total_pedidos }}</strong></p>
-                        <p class="card-text">Total Vendido: <strong>${{ pedidos_mes.total_ventas }}</strong></p>
+                        <p class="card-text">Total Vendido: <strong>${{ pedidos_mes.total_ventas |default:"0" }}</strong></p>
                     </div>
                     <div class="card-footer bg-success text-white text-center rounded-bottom">
                         <small>¡Gran trabajo!</small>
